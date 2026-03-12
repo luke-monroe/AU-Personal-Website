@@ -27,4 +27,4 @@ jobs:
 
       # Runs a single command using the runners shell
       - name: Run a one-line script
-        run: rsync -avz ./ monroel@orion.cc.andrews.edu:/homes/Student/undecided/2025a/monroel/www/
+        run: rsync -avz ./www/ monroel@orion.cc.andrews.edu:/homes/Student/undecided/2025a/monroel/www/
