@@ -654,36 +654,36 @@ function drawPlayer(facing, frame) {
 drawPlayer('down', 0);
 
 // ── Minimap ───────────────────────────────
-const miniCanvas = document.getElementById('minimap-canvas');
-const mc = miniCanvas.getContext('2d');
-mc.imageSmoothingEnabled = false;
+// const miniCanvas = document.getElementById('minimap-canvas');
+// const mc = miniCanvas.getContext('2d');
+// mc.imageSmoothingEnabled = false;
 
 let camX = 0, camY = 0, worldScale = 1.2;
 
-function drawMinimap(px, py) {
-  mc.clearRect(0, 0, 120, 90);
-  const sx = 120 / W, sy = 90 / H;
-  // Tile overview
-  for (let r = 0; r < 38; r++) {
-    for (let c = 0; c < 50; c++) {
-      const key = TILE_KEYS[tileMap[r][c]];
-      mc.fillStyle = MINIMAP_COLORS[key] || '#2d6035';
-      mc.fillRect(c * TS * sx, r * TS * sy, Math.ceil(TS * sx), Math.ceil(TS * sy));
-    }
-  }
-  // Zone markers
-  zones.forEach(z => {
-    mc.fillStyle = '#e8d44d';
-    mc.fillRect(z.x * sx - 2, z.y * sy - 2, 5, 5);
-  });
-  // Player dot
-  mc.fillStyle = '#fff';
-  mc.fillRect(px * sx - 2, py * sy - 2, 5, 5);
-  // Viewport rect
-  mc.strokeStyle = 'rgba(255,255,255,0.3)';
-  mc.lineWidth = 1;
-  mc.strokeRect(-camX * sx, -camY * sy, window.innerWidth * sx / worldScale, window.innerHeight * sy / worldScale);
-}
+// function drawMinimap(px, py) {
+//   mc.clearRect(0, 0, 120, 90);
+//   const sx = 120 / W, sy = 90 / H;
+//   // Tile overview
+//   for (let r = 0; r < 38; r++) {
+//     for (let c = 0; c < 50; c++) {
+//       const key = TILE_KEYS[tileMap[r][c]];
+//       mc.fillStyle = MINIMAP_COLORS[key] || '#2d6035';
+//       mc.fillRect(c * TS * sx, r * TS * sy, Math.ceil(TS * sx), Math.ceil(TS * sy));
+//     }
+//   }
+//   // Zone markers
+//   zones.forEach(z => {
+//     mc.fillStyle = '#e8d44d';
+//     mc.fillRect(z.x * sx - 2, z.y * sy - 2, 5, 5);
+//   });
+//   // Player dot
+//   mc.fillStyle = '#fff';
+//   mc.fillRect(px * sx - 2, py * sy - 2, 5, 5);
+//   // Viewport rect
+//   mc.strokeStyle = 'rgba(255,255,255,0.3)';
+//   mc.lineWidth = 1;
+//   mc.strokeRect(-camX * sx, -camY * sy, window.innerWidth * sx / worldScale, window.innerHeight * sy / worldScale);
+// }
 
 // ── Camera ────────────────────────────────
 function updateCamera(px, py) {
@@ -853,7 +853,7 @@ function gameLoop() {
     playerEl.style.top  = (py - 28) + 'px';
     checkProximity(px, py);
     updateCamera(px, py);
-    drawMinimap(px, py);
+    // drawMinimap(px, py);
   }
   animFrame++;
   requestAnimationFrame(gameLoop);
@@ -877,5 +877,5 @@ handleResize();
 // ── Start ─────────────────────────────────
 createNpcElements();
 updateCamera(px, py);
-drawMinimap(px, py);
+// drawMinimap(px, py);
 gameLoop();
