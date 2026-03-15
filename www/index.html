@@ -1,1 +1,86 @@
-Welcome! Cool content coming soon. In the meantime, check out lukemonroe.dev
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Adventure Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323:wght@400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div id="cursor"></div>
+<div id="scanlines"></div>
+<div class="pixel-corner" id="corner-tl"></div>
+<div class="pixel-corner" id="corner-tr"></div>
+<div class="pixel-corner" id="corner-bl"></div>
+<div class="pixel-corner" id="corner-br"></div>
+
+<!-- HUD -->
+<div id="controls-hint">
+  WASD / ↑↓←→ to move<br>
+  E to interact
+</div>
+
+<!-- MINIMAP -->
+<!-- <div id="minimap">
+  <span id="minimap-label">MAP</span>
+  <canvas id="minimap-canvas" width="120" height="90"></canvas>
+</div> -->
+
+<!-- INTERACT PROMPT -->
+<div id="interact-prompt">
+  Press <span class="key">E</span> or <span class="key">ENTER</span> to explore
+</div>
+
+<!-- GAME WORLD -->
+<div id="game-container">
+  <div id="world">
+    <canvas id="map-canvas" width="2400" height="1800"></canvas>
+
+    <!-- Zone objects (buildings/structures) rendered as HTML for crispness -->
+    <div class="zone-object" id="zone-about" style="left:520px;top:320px;">
+      <canvas class="zone-sprite" id="sprite-about" width="96" height="112"></canvas>
+      <div class="zone-label">★ THE TAVERN</div>
+      <div class="zone-proximity-ring" style="width:200px;height:200px;top:56px;left:48px;"></div>
+    </div>
+
+    <div class="zone-object" id="zone-projects" style="left:1300px;top:600px;">
+      <canvas class="zone-sprite" id="sprite-projects" width="112" height="128"></canvas>
+      <div class="zone-label">⚒ THE WORKSHOP</div>
+      <div class="zone-proximity-ring" style="width:200px;height:200px;top:64px;left:56px;"></div>
+    </div>
+
+    <div class="zone-object" id="zone-links" style="left:900px;top:1100px;">
+      <canvas class="zone-sprite" id="sprite-links" width="96" height="96"></canvas>
+      <div class="zone-label">🌐 THE PORTAL</div>
+      <div class="zone-proximity-ring" style="width:200px;height:200px;top:48px;left:48px;"></div>
+    </div>
+
+    <!-- Player -->
+    <div id="player">
+      <div id="player-shadow"></div>
+      <canvas id="player-canvas" width="24" height="32"></canvas>
+    </div>
+  </div>
+</div>
+
+<!-- ZONE PANEL -->
+<div id="zone-panel">
+  <div id="panel-header">
+    <div id="panel-header-left">
+      <span id="panel-zone-icon"></span>
+      <div>
+        <div id="panel-title"></div>
+        <div id="panel-subtitle"></div>
+      </div>
+    </div>
+    <button id="panel-close" onclick="closePanel()">[ LEAVE ]</button>
+  </div>
+  <div id="panel-body"></div>
+</div>
+
+
+</body>
+<script src="logic.js"></script>
+</html>
