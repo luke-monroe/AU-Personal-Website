@@ -3,16 +3,211 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Luke's Cool Website</title>
+  <title>Website Directory Demo</title>
+  <style>
+    body {
+      font-family: Inter, system-ui, sans-serif;
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 2rem;
+      line-height: 1.6;
+      color: #111;
+      background: #f8fafc;
+    }
+
+    h1 {
+      margin-bottom: 0.25rem;
+    }
+
+    .card {
+      background: white;
+      border: 1px solid #dfe3e8;
+      border-radius: 1rem;
+      padding: 1.5rem;
+      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.05);
+      margin-bottom: 1.5rem;
+    }
+
+    .grid {
+      display: grid;
+      gap: 1rem;
+    }
+
+    input,
+    textarea,
+    button {
+      width: 100%;
+      font: inherit;
+    }
+
+    input,
+    textarea {
+      border: 1px solid #cbd5e1;
+      border-radius: 0.75rem;
+      padding: 0.85rem 1rem;
+      background: #f8fafc;
+      color: #111827;
+      resize: vertical;
+    }
+
+    button {
+      border: none;
+      border-radius: 0.75rem;
+      padding: 0.9rem 1rem;
+      background: #2563eb;
+      color: white;
+      cursor: pointer;
+    }
+
+    button:disabled {
+      opacity: 0.65;
+      cursor: not-allowed;
+    }
+
+    .site-item {
+      border-bottom: 1px solid #e2e8f0;
+      padding: 1rem 0;
+    }
+
+    .site-item:last-child {
+      border-bottom: none;
+    }
+
+    .site-item a {
+      color: #1d4ed8;
+      text-decoration: none;
+    }
+
+    .status {
+      margin-top: 1rem;
+      font-size: 0.95rem;
+    }
+  </style>
 </head>
 <body>
-  <p>Redirecting to <a href="https://lukemonroe.dev">lukemonroe.dev</a>...</p>
+  <div class="card">
+    <h1>Website directory</h1>
+    <p>Browse submitted websites and add your own. This demo page reads from a Supabase table and inserts new rows from the browser.</p>
+  </div>
 
-  <script>
-    window.location.replace("https://lukemonroe.dev");
+  <div class="card">
+    <form id="site-form">
+      <div class="grid">
+        <label>
+          Name
+          <input id="name" type="text" placeholder="Your name" required />
+        </label>
+        <label>
+          Website URL
+          <input id="url" type="url" placeholder="https://example.com" required />
+        </label>
+        <label>
+          Description
+          <textarea id="description" rows="4" placeholder="Short description (optional)"></textarea>
+        </label>
+      </div>
+      <button type="submit">Submit website</button>
+      <p class="status" id="status"></p>
+    </form>
+  </div>
+
+  <div class="card">
+    <h2>Submitted websites</h2>
+    <div id="site-list">Loading...</div>
+  </div>
+
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
+    import { SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY } from './supabase-config.js'
+
+    const supabase = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY)
+    const form = document.getElementById('site-form')
+    const siteList = document.getElementById('site-list')
+    const status = document.getElementById('status')
+
+    async function loadSites() {
+      siteList.textContent = 'Loading...'
+      const { data, error } = await supabase
+        .from('websites')
+        .select('id,name,url,description,created_at')
+        .order('created_at', { ascending: false })
+
+      if (error) {
+        siteList.textContent = 'Unable to fetch sites. Check your Supabase table and anon key.'
+        console.error(error)
+        return
+      }
+
+      if (!data || data.length === 0) {
+        siteList.innerHTML = '<p>No websites submitted yet. Be the first!</p>'
+        return
+      }
+
+      siteList.innerHTML = data
+        .map((site) => {
+          const description = site.description ? `<p>${escapeHtml(site.description)}</p>` : ''
+          return `
+            <div class="site-item">
+              <p><strong>${escapeHtml(site.name)}</strong></p>
+              <p><a href="${escapeUrl(site.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(site.url)}</a></p>
+              ${description}
+            </div>
+          `
+        })
+        .join('')
+    }
+
+    function escapeHtml(text) {
+      return String(text)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;')
+    }
+
+    function escapeUrl(url) {
+      try {
+        const parsed = new URL(url)
+        return parsed.href
+      } catch (error) {
+        return '#'
+      }
+    }
+
+    async function submitWebsite(event) {
+      event.preventDefault()
+
+      const name = document.getElementById('name').value.trim()
+      const url = document.getElementById('url').value.trim()
+      const description = document.getElementById('description').value.trim()
+
+      if (!name || !url) {
+        status.textContent = 'Name and website URL are required.'
+        return
+      }
+
+      status.textContent = 'Submitting…'
+      form.querySelector('button').disabled = true
+
+      const { error } = await supabase.from('websites').insert([
+        { name, url, description }
+      ])
+
+      if (error) {
+        status.textContent = 'Submission failed. Check the console for details.'
+        console.error(error)
+      } else {
+        status.textContent = 'Website submitted successfully!'
+        form.reset()
+        loadSites()
+      }
+
+      form.querySelector('button').disabled = false
+    }
+
+    form.addEventListener('submit', submitWebsite)
+    loadSites()
   </script>
 </body>
-<script>
-  
-</script>
 </html>
