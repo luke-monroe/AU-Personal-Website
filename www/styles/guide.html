@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Style Guide Showcase</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+  <link rel="stylesheet" href="/styles/guide.css">
+  <style>
+    /* Showcase specific styles */
+    .showcase-section { margin-bottom: 4rem; border-bottom: var(--border-thick); padding-bottom: 2rem; overflow: visible; }
+    .color-swatch { 
+      width: 80px; height: 80px; border: var(--border-thick); border-radius: var(--radius); 
+      display: inline-block; margin-right: 1rem;
+    }
+    .grid-layout { display: flex; gap: 2rem; flex-wrap: wrap; align-items: flex-start; }
+    .token-label { margin: 0.5rem 0 0; font-size: 0.8rem; }
+    .font-specimen { font-family: var(--font-main); border: var(--border-thick); padding: 1rem; overflow-wrap: anywhere; }
+    .theme-note { max-width: 42rem; }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="nav-brand">StyleGuide.dev</div>
+    <div class="nav-links">
+      <a href="#">Showcase</a>
+      <button id="hacker-toggle" class="btn theme-toggle" type="button" aria-label="Switch to hacker mode" title="Switch to hacker mode">
+        <i class="fa-solid fa-moon" aria-hidden="true"></i>
+      </button>
+    </div>
+  </nav>
+
+  <main>
+    <h1>Component Library</h1>
+    <p>A showcase of the primitive elements and modules available in the design system.</p>
+
+    <section class="showcase-section">
+      <h2>1. Colors & Variables</h2>
+      <div class="grid-layout">
+        <div>
+          <div class="color-swatch" style="background: var(--bg-main);"></div>
+          <p>--bg-main</p>
+        </div>
+        <div>
+          <div class="color-swatch" style="background: var(--surface);"></div>
+          <p>--surface</p>
+        </div>
+        <div>
+          <div class="color-swatch" style="background: var(--text-main);"></div>
+          <p>--text-main</p>
+        </div>
+        <div>
+          <div class="color-swatch" style="background: var(--primary);"></div>
+          <p>--primary</p>
+        </div>
+        <div>
+          <div class="color-swatch" style="background: #001a12;"></div>
+          <p class="token-label">Hacker deep green<br><code>--hacker-green-deep: #001a12</code></p>
+        </div>
+        <div>
+          <div class="color-swatch" style="background: #24d889;"></div>
+          <p class="token-label">Hacker green<br><code>--hacker-green: #24d889</code></p>
+        </div>
+      </div>
+      <p class="theme-note">Hacker mode is the dark green theme: deep green background, green surface, pale mint text, and bright green borders and primary actions. Use the moon button to preview it.</p>
+    </section>
+
+    <section class="showcase-section">
+      <h2>2. Typography & Links</h2>
+      <div class="font-specimen">
+        <strong>Primary font:</strong> <code>"Courier New", Courier, ui-monospace, monospace</code>
+        <br>Every body, button, navigation, and card label uses this monospace stack.
+      </div>
+      <p style="font-size: 1.2rem; font-weight: bold;">Heading Example</p>
+      <p>Standard body text paragraph displaying the monospace font stack. <br>
+      Inline <a href="#">hyperlinks</a> inherit the text color with an underline.</p>
+    </section>
+
+    <section class="showcase-section">
+      <h2>3. Buttons</h2>
+      <div class="grid-layout">
+        <button class="btn">Standard Button</button>
+        <button class="btn" style="background: var(--primary); color: #fff;">Primary Override</button>
+      </div>
+    </section>
+
+    <section class="showcase-section">
+      <h2>4. Cards</h2>
+      <div class="grid-layout">
+        <div class="profile-card">
+          <img src="https://via.placeholder.com/250x250" alt="Placeholder">
+          <div class="profile-card-body">
+            <strong>Generic Profile</strong><br>
+            Developer<br>
+            System Component
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const toggleBtn = document.getElementById('hacker-toggle');
+    const toggleIcon = toggleBtn.querySelector('i');
+    toggleBtn.addEventListener('click', () => {
+      const isHacker = document.body.getAttribute('data-theme') === 'hacker';
+      if (isHacker) {
+        document.body.removeAttribute('data-theme');
+      } else {
+        document.body.setAttribute('data-theme', 'hacker');
+      }
+
+      const nextIsHacker = document.body.getAttribute('data-theme') === 'hacker';
+      toggleIcon.className = nextIsHacker ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+      toggleBtn.setAttribute('aria-label', nextIsHacker ? 'Switch to light mode' : 'Switch to hacker mode');
+      toggleBtn.setAttribute('title', nextIsHacker ? 'Switch to light mode' : 'Switch to hacker mode');
+    });
+  </script>
+</body>
+</html>
