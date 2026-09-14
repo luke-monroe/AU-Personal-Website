@@ -127,7 +127,7 @@ a { color: var(--text-main); }
   display: grid;
   gap: 1rem;
   max-width: 32rem;
-  margin-top: 2rem;
+  margin: 2rem auto 0;
 }
 
 .link-list a {
