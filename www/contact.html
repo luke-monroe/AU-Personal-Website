@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact Me | LukeMonroe.dev</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+  <link rel="stylesheet" href="/styles/guide.css">
+</head>
+<body>
+  <nav>
+    <div class="nav-brand">Get In Touch</div>
+    <div class="nav-links">
+      <a href="/">Home</a>
+      <a href="/links">Links</a>
+      <!-- <a href="/contact">Contact</a> -->
+      <button id="hacker-toggle" class="btn theme-toggle" type="button" aria-label="Switch to hacker mode" title="Switch to hacker mode">
+        <i class="fa-solid fa-moon" aria-hidden="true"></i>
+      </button>
+    </div>
+  </nav>
+
+  <main class="contact-page">
+
+    <form class="contact-form" method="post" name="Contact Form" data-netlify="true">
+      <label for="email">Email</label>
+      <input id="email" name="Email" type="email" placeholder="Your Email" required>
+
+      <label for="message">Message</label>
+      <textarea id="message" name="Message" placeholder="Message..." required></textarea>
+
+      <button class="btn form-submit" type="submit">Submit</button>
+      <input type="hidden" name="form-name" value="Contact Form">
+    </form>
+  </main>
+
+  <script>
+    const toggleBtn = document.getElementById('hacker-toggle');
+    const toggleIcon = toggleBtn.querySelector('i');
+
+    toggleBtn.addEventListener('click', () => {
+      const isHacker = document.body.getAttribute('data-theme') === 'hacker';
+      if (isHacker) {
+        document.body.removeAttribute('data-theme');
+      } else {
+        document.body.setAttribute('data-theme', 'hacker');
+      }
+
+      const nextIsHacker = document.body.getAttribute('data-theme') === 'hacker';
+      toggleIcon.className = nextIsHacker ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+      toggleBtn.setAttribute('aria-label', nextIsHacker ? 'Switch to light mode' : 'Switch to hacker mode');
+      toggleBtn.setAttribute('title', nextIsHacker ? 'Switch to light mode' : 'Switch to hacker mode');
+    });
+  </script>
+</body>
+</html>

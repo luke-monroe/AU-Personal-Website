@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LinkTree | LukeMonroe.dev</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+  <link rel="stylesheet" href="/styles/guide.css">
+</head>
+<body>
+  <nav>
+    <div class="nav-brand">LinkTree</div>
+    <div class="nav-links">
+      <a href="/">Home</a>
+      <a href="/links">Links</a>
+      <!-- <a href="/contact">Contact</a> -->
+      <button id="hacker-toggle" class="btn theme-toggle" type="button" aria-label="Switch to hacker mode" title="Switch to hacker mode">
+        <i class="fa-solid fa-moon" aria-hidden="true"></i>
+      </button>
+    </div>
+  </nav>
+
+  <main>
+      <div class="link-list">
+      <a href="https://www.linkedin.com/in/luke-monroe-0b3631381/">LinkedIn</a>
+      <a href="https://github.com/luke-monroe/">GitHub</a>
+      <a href="/contact">Contact Me</a>
+    </div>
+  </main>
+
+  <script>
+    const toggleBtn = document.getElementById('hacker-toggle');
+    const toggleIcon = toggleBtn.querySelector('i');
+
+    toggleBtn.addEventListener('click', () => {
+      const isHacker = document.body.getAttribute('data-theme') === 'hacker';
+      if (isHacker) {
+        document.body.removeAttribute('data-theme');
+      } else {
+        document.body.setAttribute('data-theme', 'hacker');
+      }
+
+      const nextIsHacker = document.body.getAttribute('data-theme') === 'hacker';
+      toggleIcon.className = nextIsHacker ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+      toggleBtn.setAttribute('aria-label', nextIsHacker ? 'Switch to light mode' : 'Switch to hacker mode');
+      toggleBtn.setAttribute('title', nextIsHacker ? 'Switch to light mode' : 'Switch to hacker mode');
+    });
+  </script>
+</body>
+</html>

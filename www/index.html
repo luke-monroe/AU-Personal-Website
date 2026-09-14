@@ -3,211 +3,78 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Website Directory Demo</title>
-  <style>
-    body {
-      font-family: Inter, system-ui, sans-serif;
-      max-width: 720px;
-      margin: 0 auto;
-      padding: 2rem;
-      line-height: 1.6;
-      color: #111;
-      background: #f8fafc;
-    }
-
-    h1 {
-      margin-bottom: 0.25rem;
-    }
-
-    .card {
-      background: white;
-      border: 1px solid #dfe3e8;
-      border-radius: 1rem;
-      padding: 1.5rem;
-      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.05);
-      margin-bottom: 1.5rem;
-    }
-
-    .grid {
-      display: grid;
-      gap: 1rem;
-    }
-
-    input,
-    textarea,
-    button {
-      width: 100%;
-      font: inherit;
-    }
-
-    input,
-    textarea {
-      border: 1px solid #cbd5e1;
-      border-radius: 0.75rem;
-      padding: 0.85rem 1rem;
-      background: #f8fafc;
-      color: #111827;
-      resize: vertical;
-    }
-
-    button {
-      border: none;
-      border-radius: 0.75rem;
-      padding: 0.9rem 1rem;
-      background: #2563eb;
-      color: white;
-      cursor: pointer;
-    }
-
-    button:disabled {
-      opacity: 0.65;
-      cursor: not-allowed;
-    }
-
-    .site-item {
-      border-bottom: 1px solid #e2e8f0;
-      padding: 1rem 0;
-    }
-
-    .site-item:last-child {
-      border-bottom: none;
-    }
-
-    .site-item a {
-      color: #1d4ed8;
-      text-decoration: none;
-    }
-
-    .status {
-      margin-top: 1rem;
-      font-size: 0.95rem;
-    }
-  </style>
+  <title>LukeMonroe.Dev</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+  <link rel="stylesheet" href="/styles/guide.css">
 </head>
 <body>
-  <div class="card">
-    <h1>Website directory</h1>
-    <p>Browse submitted websites and add your own. This demo page reads from a Supabase table and inserts new rows from the browser.</p>
-  </div>
 
-  <div class="card">
-    <form id="site-form">
-      <div class="grid">
-        <label>
-          Name
-          <input id="name" type="text" placeholder="Your name" required />
-        </label>
-        <label>
-          Website URL
-          <input id="url" type="url" placeholder="https://example.com" required />
-        </label>
-        <label>
-          Description
-          <textarea id="description" rows="4" placeholder="Short description (optional)"></textarea>
-        </label>
+  <nav>
+    <div class="nav-brand">LukeMonroe.dev</div>
+    <div class="nav-links">
+      <a href="/">Home</a>
+      <a href="/links">Links</a>
+      <!-- <a href="/contact">Contact</a> -->
+      <button id="hacker-toggle" class="btn theme-toggle" type="button" aria-label="Switch to hacker mode" title="Switch to hacker mode">
+        <i class="fa-solid fa-moon" aria-hidden="true"></i>
+      </button>
+    </div>
+  </nav>
+
+  <main>
+    <!-- Top Section -->
+    <section style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 2rem; margin-bottom: 6rem;">
+      
+      <!-- Text Area -->
+      <div style="flex: 1; min-width: 300px; max-width: 500px;">
+        <p>
+          Hey there! I'm Luke. I'm a computer science major that's obsessed with finding (or making) the best and most cost effective software solutions. Check out my LinkedIn or GitHub <a href="/links">here</a>.
+        </p>
       </div>
-      <button type="submit">Submit website</button>
-      <p class="status" id="status"></p>
-    </form>
-  </div>
 
-  <div class="card">
-    <h2>Submitted websites</h2>
-    <div id="site-list">Loading...</div>
-  </div>
+      <!-- Profile Card -->
+      <div class="profile-card">
+        <img src="/assets/luke.webp" alt="Profile Image">
+        <div class="profile-card-body">
+          <ul>
+            <li>Computer Science Major</li>
+            <li>Linux User (I use NixOs, btw)</li>
+          </ul>
+        </div>
+      </div>
 
-  <script type="module">
-    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
-    import { SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY } from './supabase-config.js'
+    </section>
 
-    const supabase = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY)
-    const form = document.getElementById('site-form')
-    const siteList = document.getElementById('site-list')
-    const status = document.getElementById('status')
+    <!-- Bottom Section -->
+    <section style="display: flex; flex-wrap: wrap; align-items: center; gap: 4rem;">
+      <!-- Placeholder for the graduation cap graphic -->
+      <img src="/assets/hat.webp" alt="Graduation Cap" style="max-width: 200px; width: 100%; height: auto;">
+      <div>
+        <h2 style="margin-top: 0;">Current Status:</h2>
+        <p style="max-width: 400px;">
+          I am pursuing a Bachelors in Computer Science from Andrews University.
+        </p>
+      </div>
+    </section>
+  </main>
 
-    async function loadSites() {
-      siteList.textContent = 'Loading...'
-      const { data, error } = await supabase
-        .from('websites')
-        .select('id,name,url,description,created_at')
-        .order('created_at', { ascending: false })
-
-      if (error) {
-        siteList.textContent = 'Unable to fetch sites. Check your Supabase table and anon key.'
-        console.error(error)
-        return
-      }
-
-      if (!data || data.length === 0) {
-        siteList.innerHTML = '<p>No websites submitted yet. Be the first!</p>'
-        return
-      }
-
-      siteList.innerHTML = data
-        .map((site) => {
-          const description = site.description ? `<p>${escapeHtml(site.description)}</p>` : ''
-          return `
-            <div class="site-item">
-              <p><strong>${escapeHtml(site.name)}</strong></p>
-              <p><a href="${escapeUrl(site.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(site.url)}</a></p>
-              ${description}
-            </div>
-          `
-        })
-        .join('')
-    }
-
-    function escapeHtml(text) {
-      return String(text)
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#039;')
-    }
-
-    function escapeUrl(url) {
-      try {
-        const parsed = new URL(url)
-        return parsed.href
-      } catch (error) {
-        return '#'
-      }
-    }
-
-    async function submitWebsite(event) {
-      event.preventDefault()
-
-      const name = document.getElementById('name').value.trim()
-      const url = document.getElementById('url').value.trim()
-      const description = document.getElementById('description').value.trim()
-
-      if (!name || !url) {
-        status.textContent = 'Name and website URL are required.'
-        return
-      }
-
-      status.textContent = 'Submitting…'
-      form.querySelector('button').disabled = true
-
-      const { error } = await supabase.from('websites').insert([
-        { name, url, description }
-      ])
-
-      if (error) {
-        status.textContent = 'Submission failed. Check the console for details.'
-        console.error(error)
+  <script>
+    const toggleBtn = document.getElementById('hacker-toggle');
+    const toggleIcon = toggleBtn.querySelector('i');
+    
+    toggleBtn.addEventListener('click', () => {
+      const isHacker = document.body.getAttribute('data-theme') === 'hacker';
+      if (isHacker) {
+        document.body.removeAttribute('data-theme');
       } else {
-        status.textContent = 'Website submitted successfully!'
-        form.reset()
-        loadSites()
+        document.body.setAttribute('data-theme', 'hacker');
       }
 
-      form.querySelector('button').disabled = false
-    }
-
-    form.addEventListener('submit', submitWebsite)
-    loadSites()
+      const nextIsHacker = document.body.getAttribute('data-theme') === 'hacker';
+      toggleIcon.className = nextIsHacker ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+      toggleBtn.setAttribute('aria-label', nextIsHacker ? 'Switch to light mode' : 'Switch to hacker mode');
+      toggleBtn.setAttribute('title', nextIsHacker ? 'Switch to light mode' : 'Switch to hacker mode');
+    });
   </script>
 </body>
 </html>
