@@ -9,6 +9,19 @@
 </head>
 <body>
 
+  <div id="cutscene-overlay" aria-hidden="true">
+    <canvas id="matrix-canvas"></canvas>
+    <div id="network-logs"></div>
+    <div id="pc-monitor" style="display: none;">
+      <div id="unstyled-preview">
+        <h1>LukeMonroe.Dev</h1>
+        <p>A personal website about software, systems, and creative problem solving.</p>
+        <a href="./links">Explore the links</a>
+      </div>
+      <iframe id="styled-iframe" src="?no-cutscene=true" title="Styled website preview"></iframe>
+    </div>
+  </div>
+
   <nav>
     <div class="nav-brand">LukeMonroe.dev</div>
     <div class="nav-links">
@@ -76,5 +89,6 @@
       toggleBtn.setAttribute('title', nextIsHacker ? 'Switch to light mode' : 'Switch to hacker mode');
     });
   </script>
+  <script src="./scripts/cutscene.js"></script>
 </body>
 </html>
