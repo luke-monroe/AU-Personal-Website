@@ -1,104 +1,132 @@
-(function () {
+document.addEventListener('DOMContentLoaded', () => {
+  // Check if we should skip via URL (e.g., iframe source ?no-cutscene=true)
+  if (window.location.search.includes('no-cutscene')) {
+    document.getElementById('cutscene-overlay').remove();
+    return;
+  }
+  initMatrixCanvas();
+  runCutsceneSequence();
+});
+
+const wait = (ms) => new Promise(res => setTimeout(res, ms));
+let isSkipped = false;
+
+async function runCutsceneSequence() {
+  const packet = document.getElementById('packet');
+  const packetText = document.getElementById('packet-text');
+  const unstyled = document.getElementById('unstyled-preview');
+  const styled = document.getElementById('styled-iframe');
+  
+  // -- Step 1: Network Handshake (0s - 4.5s) --
+  await wait(500);
+  if(isSkipped) return;
+  packetText.innerText = "SYN (DNS Lookup)";
+  packet.style.animation = "reqPacket 1.5s ease-in-out forwards";
+  await wait(1800);
+  
+  if(isSkipped) return;
+  packetText.innerText = "ACK";
+  packet.style.animation = "sendPacket 1.5s ease-in-out forwards";
+  await wait(1800);
+
+  // -- Step 2: Request Raw HTML (4.5s - 9.5s) --
+  if(isSkipped) return;
+  packetText.innerText = "GET /index.html";
+  packet.style.animation = "none"; void packet.offsetWidth; // reset anim
+  packet.style.animation = "reqPacket 1.5s ease-in-out forwards";
+  await wait(1800);
+
+  if(isSkipped) return;
+  packetText.innerText = "200 OK (text/html)";
+  packet.style.animation = "none"; void packet.offsetWidth;
+  packet.style.animation = "sendPacket 1.5s ease-in-out forwards";
+  await wait(1500);
+  
+  if(isSkipped) return;
+  unstyled.style.opacity = '1'; // Reveal raw HTML
+  await wait(1500);
+
+  // -- Step 3: Request CSS (9.5s - 15.5s) --
+  if(isSkipped) return;
+  packetText.innerText = "GET /guide.css";
+  packet.style.animation = "none"; void packet.offsetWidth;
+  packet.style.animation = "reqPacket 1.5s ease-in-out forwards";
+  await wait(1800);
+
+  if(isSkipped) return;
+  packetText.innerText = "200 OK (text/css)";
+  packet.style.animation = "none"; void packet.offsetWidth;
+  packet.style.animation = "sendPacket 1.5s ease-in-out forwards";
+  await wait(1500);
+
+  if(isSkipped) return;
+  styled.style.opacity = '1'; // Fade in iframe
+  unstyled.classList.add('preview-fade-out'); // Crossfade out unstyled
+  await wait(2500);
+
+  // -- Step 4: Zoom into screen (15.5s - 19.5s) --
+  if(isSkipped) return;
+  document.getElementById('server-rack').style.opacity = '0';
+  document.getElementById('data-link').style.opacity = '0';
+  document.querySelector('.pc-base').style.opacity = '0';
+  await wait(800);
+  
+  if(isSkipped) return;
+  document.getElementById('pc-monitor').classList.add('zoom-in');
+  
+  // Wait for the CSS transition to finish
+  await wait(2000); 
+
+  // -- Step 5: Clean transition --
+  if(!isSkipped) skipIntro();
+}
+
+function skipIntro() {
+  isSkipped = true;
   const overlay = document.getElementById('cutscene-overlay');
-
-  if (!overlay) {
-    return;
-  }
-
-  if (sessionStorage.getItem('cutscenePlayed') === 'true' || window.location.search.includes('no-cutscene')) {
+  overlay.style.opacity = '0';
+  overlay.style.transition = 'opacity 0.5s ease';
+  setTimeout(() => {
     overlay.remove();
-    return;
-  }
+    document.body.style.overflow = 'auto'; // Re-enable scrolling on main page
+  }, 500);
+}
 
+// Allow skipping via Escape key
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && document.getElementById('cutscene-overlay')) {
+    skipIntro();
+  }
+});
+
+// Matrix Background Logic
+function initMatrixCanvas() {
   const canvas = document.getElementById('matrix-canvas');
-  const context = canvas.getContext('2d');
-  const logs = document.getElementById('network-logs');
-  const monitor = document.getElementById('pc-monitor');
-  const unstyledPreview = document.getElementById('unstyled-preview');
-  const styledIframe = document.getElementById('styled-iframe');
-  const characters = 'アカサタナハマヤラワ0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-  const logMessages = [
-    'DNS Query... 192.0.2.14',
-    'Establishing TCP Connection...',
-    'TLS Handshake... complete',
-    'Requesting /index.html...',
-    'Receiving HTML Packet... 100%',
-    'Rendering Document Object Model...'
-  ];
-  let columns;
-  let drops;
-  let animationFrame;
+  const ctx = canvas.getContext('2d');
+  
+  const resize = () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; };
+  window.addEventListener('resize', resize);
+  resize();
 
-  function resizeCanvas() {
-    const density = 18;
-    const scale = window.devicePixelRatio || 1;
-    canvas.width = window.innerWidth * scale;
-    canvas.height = window.innerHeight * scale;
-    canvas.style.width = `${window.innerWidth}px`;
-    canvas.style.height = `${window.innerHeight}px`;
-    context.setTransform(scale, 0, 0, scale, 0, 0);
-    columns = Math.ceil(window.innerWidth / density);
-    drops = Array.from({ length: columns }, () => Math.random() * -40);
-  }
+  const letters = '01ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+  const fontSize = 14;
+  const columns = canvas.width / fontSize;
+  const drops = Array.from({length: columns}).fill(1);
 
-  function drawMatrix() {
-    context.fillStyle = 'rgba(0, 0, 0, 0.08)';
-    context.fillRect(0, 0, window.innerWidth, window.innerHeight);
-    context.fillStyle = '#0f0';
-    context.font = '15px monospace';
+  function draw() {
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = '#0f0';
+    ctx.font = fontSize + 'px monospace';
 
-    drops.forEach((drop, index) => {
-      const character = characters[Math.floor(Math.random() * characters.length)];
-      const x = index * 18;
-      const y = drop * 18;
-      context.fillText(character, x, y);
-
-      if (y > window.innerHeight && Math.random() > 0.975) {
-        drops[index] = 0;
-      } else {
-        drops[index] += 1;
+    for (let i = 0; i < drops.length; i++) {
+      const text = letters[Math.floor(Math.random() * letters.length)];
+      ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+      if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+        drops[i] = 0;
       }
-    });
-
-    animationFrame = window.requestAnimationFrame(drawMatrix);
+      drops[i]++;
+    }
   }
-
-  function loadStyledPreview() {
-    const url = new URL(window.location.href);
-    url.searchParams.set('no-cutscene', 'true');
-    styledIframe.src = `${url.pathname}${url.search}${url.hash}`;
-  }
-
-  resizeCanvas();
-  window.addEventListener('resize', resizeCanvas);
-  loadStyledPreview();
-  drawMatrix();
-
-  logMessages.forEach((message, index) => {
-    window.setTimeout(() => {
-      const entry = document.createElement('p');
-      entry.textContent = `> ${message}`;
-      logs.appendChild(entry);
-    }, (index + 1) * 500);
-  });
-
-  window.setTimeout(() => {
-    logs.style.display = 'none';
-    monitor.style.display = 'block';
-  }, 3500);
-
-  window.setTimeout(() => {
-    unstyledPreview.classList.add('preview-fade-out');
-  }, 5000);
-
-  window.setTimeout(() => {
-    monitor.classList.add('zoom-in');
-  }, 6500);
-
-  window.setTimeout(() => {
-    window.cancelAnimationFrame(animationFrame);
-    window.removeEventListener('resize', resizeCanvas);
-    sessionStorage.setItem('cutscenePlayed', 'true');
-    overlay.remove();
-  }, 8500);
-})();
+  setInterval(draw, 50);
+}

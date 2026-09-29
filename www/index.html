@@ -11,14 +11,40 @@
 
   <div id="cutscene-overlay" aria-hidden="true">
     <canvas id="matrix-canvas"></canvas>
-    <div id="network-logs"></div>
-    <div id="pc-monitor" style="display: none;">
-      <div id="unstyled-preview">
-        <h1>LukeMonroe.Dev</h1>
-        <p>A personal website about software, systems, and creative problem solving.</p>
-        <a href="./links">Explore the links</a>
+    <button id="skip-btn" onclick="skipIntro()">Skip Intro [ESC]</button>
+    
+    <div id="cutscene-stage">
+      <!-- Left: PC Monitor -->
+      <div id="pc-wrapper">
+        <div id="pc-monitor">
+          <div id="unstyled-preview">
+            <h1>LukeMonroe.Dev</h1>
+            <p>A personal website about software, systems, and creative problem solving.</p>
+            <a href="./links">Explore the links</a>
+          </div>
+          <iframe id="styled-iframe" src="?no-cutscene=true" title="Styled website preview" tabindex="-1"></iframe>
+        </div>
+        <div class="pc-base"></div>
       </div>
-      <iframe id="styled-iframe" src="?no-cutscene=true" title="Styled website preview"></iframe>
+
+      <!-- Middle: Network Connection -->
+      <div id="data-link">
+        <div class="link-line"></div>
+        <div id="packet"></div>
+        <div id="packet-text">Initializing...</div>
+      </div>
+
+      <!-- Right: Server -->
+      <div id="server-rack">
+        <div class="server-blinkenlights">
+          <span></span><span></span><span></span>
+        </div>
+        <div class="wheel-container">
+          <div class="hamster-wheel">
+            <i class="fa-solid fa-mouse"></i>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
