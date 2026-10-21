@@ -190,17 +190,22 @@ a { color: var(--text-main); }
   margin-top: 0.5rem;
 }
 
-/* Intro cutscene */
+/* =========================================
+   4. INTRO CUTSCENE
+   ========================================= */
 #cutscene-overlay {
   position: fixed;
   inset: 0;
   z-index: 9999;
   width: 100vw;
   height: 100vh;
-  overflow: hidden;
   background: #000;
   color: #0f0;
   font-family: 'Courier New', Courier, monospace;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
 }
 
 #matrix-canvas {
@@ -208,51 +213,75 @@ a { color: var(--text-main); }
   inset: 0;
   width: 100%;
   height: 100%;
-  opacity: 0.72;
+  opacity: 0.35;
+  z-index: 1;
 }
 
-#network-logs {
+#skip-btn {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  width: min(90vw, 42rem);
-  transform: translate(-50%, -50%);
+  top: 1.5rem;
+  right: 2rem;
+  z-index: 20;
+  background: transparent;
   color: #0f0;
-  font-size: clamp(0.8rem, 2vw, 1rem);
-  line-height: 1.7;
-  text-shadow: 0 0 8px #0f0;
+  border: 1px solid #0f0;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  font-family: inherit;
+  font-weight: bold;
+  border-radius: var(--radius);
+  transition: all 0.2s ease, opacity 0.5s ease;
 }
 
-#network-logs p {
-  margin: 0;
+#skip-btn:hover {
+  background: #0f0;
+  color: #000;
 }
 
+/* Stage Layout */
+#cutscene-stage {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 90vw;
+  max-width: 1200px;
+  z-index: 5;
+}
+
+/* PC Wrapper & Base */
+#pc-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: opacity 0.8s ease;
+}
+
+.pc-base {
+  width: 30%;
+  height: 1.5rem;
+  margin-top: 0.5rem;
+  background: #111;
+  border: 2px solid #343434;
+  border-top: none;
+  transition: opacity 0.8s ease;
+  clip-path: polygon(10% 0, 90% 0, 100% 100%, 0% 100%);
+}
+
+/* PC Monitor */
 #pc-monitor {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: min(84vw, 60rem);
+  position: relative;
+  width: 45vw;
+  max-width: 600px;
   aspect-ratio: 16 / 10;
-  padding: clamp(0.6rem, 2vw, 1.25rem);
-  transform: translate(-50%, -50%) scale(0.72);
   background: #171717;
   border: clamp(0.6rem, 2.4vw, 1.5rem) solid #343434;
   border-radius: 0.5rem;
-  box-shadow: 0 0 0 0.25rem #111, 0 1.5rem 4rem rgba(0, 0, 0, 0.8);
-  transition: transform 2s ease, opacity 2s ease;
+  box-shadow: 0 0 0 0.25rem #111, 0 1rem 3rem rgba(0, 255, 0, 0.1);
+  overflow: hidden;
+  box-sizing: border-box;
 }
 
-#pc-monitor::after {
-  position: absolute;
-  top: 100%;
-  left: 50%;
-  width: 50vw;
-  height: 50vh;
-  content: '';
-  background: #343434;
-  transform: translateX(-50%);
-}
-
+/* Screen Viewport & Previews */
 #unstyled-preview,
 #styled-iframe {
   position: absolute;
@@ -260,14 +289,16 @@ a { color: var(--text-main); }
   width: 100%;
   height: 100%;
   border: 0;
+  pointer-events: none;
 }
 
 #unstyled-preview {
   z-index: 2;
   padding: 2rem;
-  overflow: auto;
   background: #fff;
   color: #000;
+  opacity: 0;
+  overflow: hidden;
   transition: opacity 1.5s ease;
 }
 
@@ -278,155 +309,114 @@ a { color: var(--text-main); }
 
 #styled-iframe {
   z-index: 1;
-  background: #fff;
+  opacity: 0;
+  background: transparent;
+  overflow: hidden;
+  transition: opacity 1s ease;
 }
 
 .preview-fade-out {
-  opacity: 0;
-  transition: opacity 3s ease;
+  opacity: 0 !important;
+  transition: opacity 2s ease !important;
 }
-
-
-/* 1. Update the transition on your EXISTING #pc-monitor class to animate all properties */
-#pc-monitor {
-  /* ... keep your existing properties ... */
-  transition: all 2s ease-in-out; 
-}
-
-/* 2. Replace your zoom-in class with this expanding version */
-#pc-monitor.zoom-in {
-  width: 100vw;
-  height: 100vh;
-  aspect-ratio: auto;
-  padding: 0;
-  border-width: 0;
-  border-radius: 0;
-  box-shadow: none;
-  background: transparent;
-  transform: translate(-50%, -50%) scale(1); /* Resets the initial 0.72 scale to 1 */
-}
-
-
-
-/* Cutscene Overlay Base */
-#cutscene-overlay {
-  position: fixed; inset: 0; z-index: 9999;
-  background: #000; color: #0f0;
-  font-family: 'Courier New', Courier, monospace;
-  display: flex; justify-content: center; align-items: center;
-  overflow: hidden;
-}
-
-#matrix-canvas {
-  position: absolute; inset: 0; opacity: 0.3; z-index: 1;
-}
-
-#skip-btn {
-  position: absolute; top: 1.5rem; right: 2rem; z-index: 10;
-  background: transparent; color: #0f0; border: 1px solid #0f0;
-  padding: 0.5rem 1rem; cursor: pointer; font-family: inherit;
-  transition: all 0.2s ease;
-}
-#skip-btn:hover { background: #0f0; color: #000; }
-
-/* The Stage Layout */
-#cutscene-stage {
-  display: flex; align-items: center; justify-content: space-between;
-  width: 90vw; max-width: 1200px; z-index: 5;
-}
-
-/* PC Wrapper & Base */
-#pc-wrapper {
-  display: flex; flex-direction: column; align-items: center;
-  transition: opacity 1s ease;
-}
-.pc-base {
-  width: 30%; height: 1.5rem; margin-top: 0.5rem;
-  background: #111; border: 2px solid #343434;
-  border-top: none; transition: opacity 1s ease;
-  clip-path: polygon(10% 0, 90% 0, 100% 100%, 0% 100%);
-}
-
-/* PC Monitor Tweaks (Overriding some of your absolute positioning for the flex layout) */
-#pc-monitor {
-  position: relative; top: auto; left: auto; transform: none;
-  width: 45vw; max-width: 600px; aspect-ratio: 16 / 10;
-  background: #171717; border: clamp(0.6rem, 2.4vw, 1.5rem) solid #343434;
-  border-radius: 0.5rem;
-  box-shadow: 0 0 0 0.25rem #111, 0 1rem 3rem rgba(0,255,0,0.1);
-  transition: all 2s cubic-bezier(0.8, 0, 0.2, 1);
-  overflow: hidden;
-}
-
-#pc-monitor::after { display: none; } /* Disable old shadow element */
-
-/* Zoom-in State for the monitor */
-#pc-monitor.zoom-in {
-  position: fixed; top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
-  width: 100vw; height: 100vh; max-width: 100vw; aspect-ratio: auto;
-  border-width: 0; border-radius: 0; box-shadow: none; z-index: 10;
-}
-
-/* Iframe and Unstyled Preview */
-#unstyled-preview, #styled-iframe {
-  position: absolute; inset: 0; width: 100%; height: 100%; border: 0;
-}
-#unstyled-preview {
-  z-index: 2; padding: 2rem; background: #fff; color: #000;
-  opacity: 0; /* Starts hidden until Step 2 */
-  transition: opacity 1.5s ease;
-}
-#styled-iframe { z-index: 1; opacity: 0; transition: opacity 1s ease; }
-.preview-fade-out { opacity: 0 !important; }
 
 /* Network Link */
 #data-link {
-  flex-grow: 1; height: 100px; position: relative; margin: 0 2rem;
-  display: flex; align-items: center; justify-content: center;
-  transition: opacity 1s ease;
+  flex-grow: 1;
+  height: 100px;
+  position: relative;
+  margin: 0 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.8s ease;
 }
+
 .link-line {
-  width: 100%; height: 2px; background: rgba(0, 255, 0, 0.3);
+  width: 100%;
+  height: 2px;
+  background: rgba(0, 255, 0, 0.3);
   border-bottom: 1px dashed #0f0;
 }
+
 #packet {
-  position: absolute; top: 50%; transform: translateY(-50%);
-  width: 12px; height: 12px; background: #0f0; border-radius: 50%;
-  box-shadow: 0 0 10px #0f0; opacity: 0;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 12px;
+  height: 12px;
+  background: #0f0;
+  border-radius: 50%;
+  box-shadow: 0 0 10px #0f0;
+  opacity: 0;
 }
+
 #packet-text {
-  position: absolute; top: 10px; width: 100%;
-  text-align: center; color: #0f0; text-shadow: 0 0 5px #0f0;
+  position: absolute;
+  top: 10px;
+  width: 100%;
+  text-align: center;
+  color: #0f0;
+  text-shadow: 0 0 5px #0f0;
 }
 
 /* Server Rack */
 #server-rack {
-  width: 15vw; max-width: 200px; height: 35vh;
-  border: 4px solid #0f0; background: rgba(0,0,0,0.8);
-  display: flex; flex-direction: column; justify-content: space-between;
-  padding: 1rem; box-shadow: 0 0 15px rgba(0,255,0,0.2) inset;
-  transition: opacity 1s ease;
+  width: 15vw;
+  max-width: 200px;
+  height: 35vh;
+  border: 4px solid #0f0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 1rem;
+  box-shadow: 0 0 15px rgba(0, 255, 0, 0.2) inset;
+  transition: opacity 0.8s ease;
 }
+
 .server-blinkenlights {
-  display: flex; gap: 0.5rem; border-bottom: 2px dashed #0f0; padding-bottom: 1rem;
+  display: flex;
+  gap: 0.5rem;
+  border-bottom: 2px dashed #0f0;
+  padding-bottom: 1rem;
 }
+
 .server-blinkenlights span {
-  width: 10px; height: 10px; background: #0f0; border-radius: 50%;
+  width: 10px;
+  height: 10px;
+  background: #0f0;
+  border-radius: 50%;
   animation: blink 1s infinite alternate;
 }
+
 .server-blinkenlights span:nth-child(2) { animation-delay: 0.3s; }
 .server-blinkenlights span:nth-child(3) { animation-delay: 0.6s; }
 
 .wheel-container {
-  width: 100%; aspect-ratio: 1; border: 2px solid #0f0; border-radius: 50%;
-  display: flex; justify-content: center; align-items: center;
-  position: relative; overflow: hidden;
+  width: 100%;
+  aspect-ratio: 1;
+  border: 2px solid #0f0;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
 }
+
 .hamster-wheel {
-  width: 100%; height: 100%; border: 2px dashed #0f0; border-radius: 50%;
-  display: flex; justify-content: center; align-items: flex-end; padding-bottom: 15%;
-  animation: spin 3s linear infinite; font-size: 2rem; color: #0f0;
+  width: 100%;
+  height: 100%;
+  border: 2px dashed #0f0;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  padding-bottom: 15%;
+  animation: spin 3s linear infinite;
+  font-size: 2rem;
+  color: #0f0;
 }
 
 /* Animations */
