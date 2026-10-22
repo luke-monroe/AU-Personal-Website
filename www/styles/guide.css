@@ -286,17 +286,13 @@ html.no-cutscene #cutscene-overlay {
 }
 
 /* Screen Viewport & Previews */
-#unstyled-preview,
-#styled-iframe {
+#unstyled-preview {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   border: 0;
   pointer-events: none;
-}
-
-#unstyled-preview {
   z-index: 2;
   padding: 1.25rem;
   background: #fff;
@@ -322,6 +318,15 @@ html.no-cutscene #cutscene-overlay {
 }
 
 #styled-iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 250%;
+  height: 250%;
+  transform: scale(0.4);
+  transform-origin: 0 0;
+  border: 0;
+  pointer-events: none;
   z-index: 1;
   opacity: 0;
   background: transparent;

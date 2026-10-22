@@ -167,6 +167,15 @@ async function runCutsceneSequence() {
     `box-shadow ${animDuration * 0.8}ms ease`
   ].join(', ');
 
+  if (styled) {
+    styled.style.transition = [
+      styled.style.transition,
+      `width ${animDuration}ms ${timingFn}`,
+      `height ${animDuration}ms ${timingFn}`,
+      `transform ${animDuration}ms ${timingFn}`
+    ].filter(Boolean).join(', ');
+  }
+
   requestAnimationFrame(() => {
     monitor.style.top = '0px';
     monitor.style.left = '0px';
@@ -176,6 +185,12 @@ async function runCutsceneSequence() {
     monitor.style.borderColor = 'transparent';
     monitor.style.borderRadius = '0px';
     monitor.style.boxShadow = 'none';
+
+    if (styled) {
+      styled.style.width = '100%';
+      styled.style.height = '100%';
+      styled.style.transform = 'scale(1)';
+    }
   });
 
   await wait(animDuration);
