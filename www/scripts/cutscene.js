@@ -40,28 +40,28 @@ async function runCutsceneSequence() {
   await wait(400);
   if (isSkipped) return;
   sendPacketAnim("TCP [SYN] Port 443", 'req', 1.1);
-  await wait(1250);
+  await wait(800);
 
   if (isSkipped) return;
   sendPacketAnim("TCP [SYN, ACK]", 'send', 1.1);
-  await wait(1250);
+  await wait(800);
 
   if (isSkipped) return;
   sendPacketAnim("TCP [ACK]", 'req', 1.0);
-  await wait(1150);
+  await wait(800);
 
   // -- Step 2: TLS 1.3 Handshake --
   if (isSkipped) return;
   sendPacketAnim("TLS 1.3 Client Hello", 'req', 1.1);
-  await wait(1250);
+  await wait(800);
 
   if (isSkipped) return;
   sendPacketAnim("TLS Server Hello + Cert", 'send', 1.1);
-  await wait(1250);
+  await wait(800);
 
   if (isSkipped) return;
   sendPacketAnim("TLS Handshake Complete", 'send', 1.0);
-  await wait(1150);
+  await wait(800);
 
   // -- Step 3: HTTP Document (HTML) --
   if (isSkipped) return;
