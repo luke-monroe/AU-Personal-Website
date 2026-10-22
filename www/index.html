@@ -540,23 +540,50 @@
       toggleBtn.setAttribute('title', isHacker ? 'Switch to light mode' : 'Switch to hacker mode');
     };
 
+    const setTheme = (isHacker, broadcast = true) => {
+      if (isHacker) {
+        document.body.setAttribute('data-theme', 'hacker');
+        document.documentElement.setAttribute('data-theme', 'hacker');
+        localStorage.setItem('theme', 'hacker');
+        updateThemeUI(true);
+      } else {
+        document.body.removeAttribute('data-theme');
+        document.documentElement.removeAttribute('data-theme');
+        localStorage.removeItem('theme');
+        updateThemeUI(false);
+      }
+
+      if (broadcast) {
+        // If inside an iframe, tell the parent
+        if (window.parent && window.parent !== window) {
+          window.parent.postMessage({ type: 'SET_THEME', theme: isHacker ? 'hacker' : 'light' }, '*');
+        }
+        // If this is the parent, tell any iframe preview
+        const iframe = document.getElementById('styled-iframe');
+        if (iframe && iframe.contentWindow) {
+          iframe.contentWindow.postMessage({ type: 'SET_THEME', theme: isHacker ? 'hacker' : 'light' }, '*');
+        }
+      }
+    };
+
     if (localStorage.getItem('theme') === 'hacker') {
       document.body.setAttribute('data-theme', 'hacker');
+      document.documentElement.setAttribute('data-theme', 'hacker');
       updateThemeUI(true);
     }
     
     toggleBtn.addEventListener('click', () => {
       const isHacker = document.body.getAttribute('data-theme') === 'hacker' || document.documentElement.getAttribute('data-theme') === 'hacker';
-      if (isHacker) {
-        document.body.removeAttribute('data-theme');
-        document.documentElement.removeAttribute('data-theme');
-        localStorage.removeItem('theme');
-        updateThemeUI(false);
-      } else {
-        document.body.setAttribute('data-theme', 'hacker');
-        document.documentElement.setAttribute('data-theme', 'hacker');
-        localStorage.setItem('theme', 'hacker');
-        updateThemeUI(true);
+      setTheme(!isHacker, true);
+    });
+
+    window.addEventListener('message', (event) => {
+      if (event.data && event.data.type === 'SET_THEME') {
+        const wantsHacker = event.data.theme === 'hacker';
+        const isCurrentHacker = document.body.getAttribute('data-theme') === 'hacker' || document.documentElement.getAttribute('data-theme') === 'hacker';
+        if (wantsHacker !== isCurrentHacker) {
+          setTheme(wantsHacker, false);
+        }
       }
     });
   </script>

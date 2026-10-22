@@ -87,6 +87,8 @@ async function runCutsceneSequence() {
 
   if (isSkipped) return;
   styled.style.opacity = '1'; // Reveal 1:1 styled preview
+  styled.style.pointerEvents = 'auto'; // Enable clicking elements inside the PC screen
+  unstyled.style.pointerEvents = 'none';
   unstyled.classList.add('preview-fade-out'); // Crossfade out raw HTML
   await wait(1300);
 
