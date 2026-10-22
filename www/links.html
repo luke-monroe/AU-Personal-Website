@@ -15,13 +15,18 @@
 <body>
   <nav>
     <div class="nav-brand">LinkTree</div>
-    <div class="nav-links">
-      <a href="./">Home</a>
-      <a href="./links">Links</a>
-      <a href="./contact">Contact</a>
+    <div class="nav-actions">
       <button id="hacker-toggle" class="btn theme-toggle" type="button" aria-label="Switch to hacker mode" title="Switch to hacker mode">
         <i class="fa-solid fa-moon" aria-hidden="true"></i>
       </button>
+      <button id="burger-toggle" class="btn menu-toggle" type="button" aria-label="Toggle navigation menu" aria-expanded="false" title="Toggle navigation menu">
+        <i class="fa-solid fa-bars" aria-hidden="true"></i>
+      </button>
+    </div>
+    <div class="nav-links" id="nav-links">
+      <a href="./">Home</a>
+      <a href="./links">Links</a>
+      <a href="./contact">Contact</a>
     </div>
   </nav>
 
@@ -62,6 +67,37 @@
         updateThemeUI(true);
       }
     });
+
+    const burgerBtn = document.getElementById('burger-toggle');
+    const navLinks = document.getElementById('nav-links');
+    if (burgerBtn && navLinks) {
+      burgerBtn.addEventListener('click', () => {
+        const isOpen = navLinks.classList.toggle('nav-open');
+        burgerBtn.setAttribute('aria-expanded', isOpen);
+        const icon = burgerBtn.querySelector('i');
+        if (icon) {
+          icon.className = isOpen ? 'fa-solid fa-xmark' : 'fa-solid fa-bars';
+        }
+      });
+
+      document.addEventListener('click', (e) => {
+        if (!burgerBtn.contains(e.target) && !navLinks.contains(e.target) && navLinks.classList.contains('nav-open')) {
+          navLinks.classList.remove('nav-open');
+          burgerBtn.setAttribute('aria-expanded', 'false');
+          const icon = burgerBtn.querySelector('i');
+          if (icon) icon.className = 'fa-solid fa-bars';
+        }
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && navLinks.classList.contains('nav-open')) {
+          navLinks.classList.remove('nav-open');
+          burgerBtn.setAttribute('aria-expanded', 'false');
+          const icon = burgerBtn.querySelector('i');
+          if (icon) icon.className = 'fa-solid fa-bars';
+        }
+      });
+    }
   </script>
 </body>
 </html>

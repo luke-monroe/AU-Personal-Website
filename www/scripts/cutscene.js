@@ -142,6 +142,7 @@ async function runCutsceneSequence() {
   monitor.style.margin = '0';
   monitor.style.transform = 'none';
   monitor.style.zIndex = '1000';
+  monitor.style.aspectRatio = 'auto';
 
   // Force reflow to commit starting position
   void monitor.offsetWidth;

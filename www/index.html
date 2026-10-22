@@ -483,22 +483,27 @@
 
   <nav>
     <div class="nav-brand">LukeMonroe.dev</div>
-    <div class="nav-links">
-      <a href="./">Home</a>
-      <a href="./links">Links</a>
-      <a href="./contact">Contact</a>
+    <div class="nav-actions">
       <button id="hacker-toggle" class="btn theme-toggle" type="button" aria-label="Switch to hacker mode" title="Switch to hacker mode">
         <i class="fa-solid fa-moon" aria-hidden="true"></i>
       </button>
+      <button id="burger-toggle" class="btn menu-toggle" type="button" aria-label="Toggle navigation menu" aria-expanded="false" title="Toggle navigation menu">
+        <i class="fa-solid fa-bars" aria-hidden="true"></i>
+      </button>
+    </div>
+    <div class="nav-links" id="nav-links">
+      <a href="./">Home</a>
+      <a href="./links">Links</a>
+      <a href="./contact">Contact</a>
     </div>
   </nav>
 
   <main>
     <!-- Top Section -->
-    <section style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 2rem; margin-bottom: 6rem;">
+    <section class="hero-section" style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 2rem; margin-bottom: 6rem;">
       
       <!-- Text Area -->
-      <div style="flex: 1; min-width: 300px; max-width: 500px;">
+      <div class="hero-text" style="flex: 1; min-width: 300px; max-width: 500px;">
         <p>
           Hey there! I'm Luke. I'm a computer science major that's obsessed with finding (or making) the best and most cost effective software solutions. Check out my LinkedIn or GitHub <a href="./links">here</a>.
         </p>
@@ -518,10 +523,10 @@
     </section>
 
     <!-- Bottom Section -->
-    <section style="display: flex; flex-wrap: wrap; align-items: center; gap: 4rem;">
+    <section class="status-section" style="display: flex; flex-wrap: wrap; align-items: center; gap: 4rem;">
       <!-- Placeholder for the graduation cap graphic -->
-      <img src="./assets/hat.webp" alt="Graduation Cap" style="max-width: 200px; width: 100%; height: auto;">
-      <div>
+      <img class="status-img" src="./assets/hat.webp" alt="Graduation Cap" style="max-width: 200px; width: 100%; height: auto;">
+      <div class="status-text">
         <h2 style="margin-top: 0;">Current Status:</h2>
         <p style="max-width: 400px;">
           I am pursuing a Bachelors in Computer Science from Andrews University.
@@ -586,6 +591,37 @@
         }
       }
     });
+
+    const burgerBtn = document.getElementById('burger-toggle');
+    const navLinks = document.getElementById('nav-links');
+    if (burgerBtn && navLinks) {
+      burgerBtn.addEventListener('click', () => {
+        const isOpen = navLinks.classList.toggle('nav-open');
+        burgerBtn.setAttribute('aria-expanded', isOpen);
+        const icon = burgerBtn.querySelector('i');
+        if (icon) {
+          icon.className = isOpen ? 'fa-solid fa-xmark' : 'fa-solid fa-bars';
+        }
+      });
+
+      document.addEventListener('click', (e) => {
+        if (!burgerBtn.contains(e.target) && !navLinks.contains(e.target) && navLinks.classList.contains('nav-open')) {
+          navLinks.classList.remove('nav-open');
+          burgerBtn.setAttribute('aria-expanded', 'false');
+          const icon = burgerBtn.querySelector('i');
+          if (icon) icon.className = 'fa-solid fa-bars';
+        }
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && navLinks.classList.contains('nav-open')) {
+          navLinks.classList.remove('nav-open');
+          burgerBtn.setAttribute('aria-expanded', 'false');
+          const icon = burgerBtn.querySelector('i');
+          if (icon) icon.className = 'fa-solid fa-bars';
+        }
+      });
+    }
   </script>
   <script src="./scripts/cutscene.js"></script>
 </body>
