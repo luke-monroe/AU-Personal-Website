@@ -396,27 +396,88 @@ a { color: var(--text-main); }
 .wheel-container {
   width: 100%;
   aspect-ratio: 1;
-  border: 2px solid #0f0;
-  border-radius: 50%;
   display: flex;
   justify-content: center;
   align-items: center;
   position: relative;
-  overflow: hidden;
+  overflow: visible;
 }
 
-.hamster-wheel {
+.hamster-wheel-scene {
   width: 100%;
   height: 100%;
-  border: 2px dashed #0f0;
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: flex-end;
-  padding-bottom: 15%;
-  animation: spin 3s linear infinite;
-  font-size: 2rem;
-  color: #0f0;
+  max-height: 100%;
+  display: block;
+  overflow: visible;
+  filter: drop-shadow(0 0 6px rgba(0, 255, 0, 0.2));
+}
+
+/* Wheel clockwise spinning */
+.hw-wheel-spinner {
+  transform-origin: 60px 52px;
+  animation: hw-spin 1.2s linear infinite;
+}
+
+@keyframes hw-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Speed / motion marks pulsing */
+.hw-motion-lines {
+  animation: hw-motion-flicker 0.35s steps(2, start) infinite;
+}
+
+@keyframes hw-motion-flicker {
+  0% { opacity: 0.95; }
+  50% { opacity: 0.3; }
+  100% { opacity: 0.95; }
+}
+
+/* Hamster running animation frame cycle */
+.hw-hamster {
+  /* Subtle run gait bounce */
+  animation: hw-hamster-bounce 0.18s ease-in-out infinite alternate;
+}
+
+@keyframes hw-hamster-bounce {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-0.8px); }
+}
+
+.hw-frame {
+  opacity: 0;
+  animation-duration: 0.36s;
+  animation-iteration-count: infinite;
+  animation-timing-function: steps(1);
+}
+
+.hw-frame-1 { animation-name: hw-run-1; }
+.hw-frame-2 { animation-name: hw-run-2; }
+.hw-frame-3 { animation-name: hw-run-3; }
+.hw-frame-4 { animation-name: hw-run-4; }
+
+@keyframes hw-run-1 {
+  0%, 100% { opacity: 1; }
+  25% { opacity: 0; }
+}
+
+@keyframes hw-run-2 {
+  0% { opacity: 0; }
+  25% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+@keyframes hw-run-3 {
+  0% { opacity: 0; }
+  50% { opacity: 1; }
+  75% { opacity: 0; }
+}
+
+@keyframes hw-run-4 {
+  0% { opacity: 0; }
+  75% { opacity: 1; }
+  100% { opacity: 0; }
 }
 
 /* Animations */
