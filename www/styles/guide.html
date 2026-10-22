@@ -6,6 +6,11 @@
   <title>Style Guide Showcase</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
   <link rel="stylesheet" href="./guide.css">
+  <script>
+    if (localStorage.getItem('theme') === 'hacker') {
+      document.documentElement.setAttribute('data-theme', 'hacker');
+    }
+  </script>
   <style>
     /* Showcase specific styles */
     .showcase-section { margin-bottom: 4rem; border-bottom: var(--border-thick); padding-bottom: 2rem; overflow: visible; }
@@ -105,18 +110,31 @@
   <script>
     const toggleBtn = document.getElementById('hacker-toggle');
     const toggleIcon = toggleBtn.querySelector('i');
+
+    const updateThemeUI = (isHacker) => {
+      toggleIcon.className = isHacker ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+      toggleBtn.setAttribute('aria-label', isHacker ? 'Switch to light mode' : 'Switch to hacker mode');
+      toggleBtn.setAttribute('title', isHacker ? 'Switch to light mode' : 'Switch to hacker mode');
+    };
+
+    if (localStorage.getItem('theme') === 'hacker') {
+      document.body.setAttribute('data-theme', 'hacker');
+      updateThemeUI(true);
+    }
+
     toggleBtn.addEventListener('click', () => {
-      const isHacker = document.body.getAttribute('data-theme') === 'hacker';
+      const isHacker = document.body.getAttribute('data-theme') === 'hacker' || document.documentElement.getAttribute('data-theme') === 'hacker';
       if (isHacker) {
         document.body.removeAttribute('data-theme');
+        document.documentElement.removeAttribute('data-theme');
+        localStorage.removeItem('theme');
+        updateThemeUI(false);
       } else {
         document.body.setAttribute('data-theme', 'hacker');
+        document.documentElement.setAttribute('data-theme', 'hacker');
+        localStorage.setItem('theme', 'hacker');
+        updateThemeUI(true);
       }
-
-      const nextIsHacker = document.body.getAttribute('data-theme') === 'hacker';
-      toggleIcon.className = nextIsHacker ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
-      toggleBtn.setAttribute('aria-label', nextIsHacker ? 'Switch to light mode' : 'Switch to hacker mode');
-      toggleBtn.setAttribute('title', nextIsHacker ? 'Switch to light mode' : 'Switch to hacker mode');
     });
   </script>
 </body>

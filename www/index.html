@@ -6,27 +6,504 @@
   <title>LukeMonroe.Dev</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
   <link rel="stylesheet" href="./styles/guide.css">
+  <script>
+    if (localStorage.getItem('theme') === 'hacker') {
+      document.documentElement.setAttribute('data-theme', 'hacker');
+    }
+    const navEntry = performance.getEntriesByType?.('navigation')?.[0];
+    const isReload = navEntry ? navEntry.type === 'reload' : (performance.navigation && performance.navigation.type === 1);
+    if (isReload) {
+      sessionStorage.removeItem('cutscene_shown');
+    }
+    if (window.location.search.includes('no-cutscene') || sessionStorage.getItem('cutscene_shown')) {
+      document.documentElement.classList.add('no-cutscene');
+    }
+  </script>
 </head>
-<body>
+<body class="homepage">
+
+  <div id="cutscene-overlay" aria-hidden="true">
+    <canvas id="matrix-canvas"></canvas>
+    <button id="skip-btn" onclick="skipIntro()">Skip Intro [ESC]</button>
+    
+    <div id="cutscene-stage">
+      <!-- Left: PC Monitor -->
+      <div id="pc-wrapper">
+        <div id="pc-monitor">
+          <div id="unstyled-preview"><pre><code>&lt;nav&gt;
+  &lt;div class="nav-brand"&gt;LukeMonroe.dev&lt;/div&gt;
+  &lt;div class="nav-links"&gt;
+    &lt;a href="./"&gt;Home&lt;/a&gt;
+    &lt;a href="./links"&gt;Links&lt;/a&gt;
+    &lt;a href="./contact"&gt;Contact&lt;/a&gt;
+    &lt;button id="hacker-toggle" class="btn theme-toggle" type="button" aria-label="Switch to hacker mode" title="Switch to hacker mode"&gt;
+      &lt;i class="fa-solid fa-moon" aria-hidden="true"&gt;&lt;/i&gt;
+    &lt;/button&gt;
+  &lt;/div&gt;
+&lt;/nav&gt;
+
+&lt;main&gt;
+  &lt;!-- Top Section --&gt;
+  &lt;section style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 2rem; margin-bottom: 6rem;"&gt;
+    
+    &lt;!-- Text Area --&gt;
+    &lt;div style="flex: 1; min-width: 300px; max-width: 500px;"&gt;
+      &lt;p&gt;
+        Hey there! I'm Luke. I'm a computer science major that's obsessed with finding (or making) the best and most cost effective software solutions. Check out my LinkedIn or GitHub &lt;a href="./links"&gt;here&lt;/a&gt;.</code></pre></div>
+          <iframe id="styled-iframe" src="?no-cutscene=true" title="Styled website preview" tabindex="-1" scrolling="no"></iframe>
+        </div>
+        <div class="pc-base"></div>
+      </div>
+
+      <!-- Middle: Network Connection -->
+      <div id="data-link">
+        <div class="link-line"></div>
+        <div id="packet"></div>
+        <div id="packet-text">Initializing...</div>
+      </div>
+
+      <!-- Right: Server Rack -->
+      <div id="server-rack" role="region" aria-label="Datacenter server rack with kinetic power core">
+        <!-- Rack Top Header with Status & Model Label -->
+        <div class="rack-header">
+          <span class="rack-label">SRV-NODE-01</span>
+          <div class="rack-header-leds">
+            <span class="rack-led led-green" title="Power"></span>
+            <span class="rack-led led-amber blink-fast" title="Activity"></span>
+          </div>
+        </div>
+
+        <!-- Main Rack Enclosure with Mounting Rails and Chassis Stack -->
+        <div class="rack-body">
+          <!-- Left Mounting Rail with EIA-310 Unit Holes -->
+          <div class="rack-rail rack-rail-left" aria-hidden="true">
+            <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+          </div>
+
+          <!-- Vertical Stack of Server Chassis Units -->
+          <div class="rack-chassis-stack">
+            <!-- 1U Top Unit: Network Switch & Patch Panel -->
+            <div class="server-unit unit-switch">
+              <div class="unit-ears ear-left"><i></i></div>
+              <div class="switch-panel">
+                <div class="rj45-bank">
+                  <span class="rj45-port port-active"></span>
+                  <span class="rj45-port port-active port-blink"></span>
+                  <span class="rj45-port"></span>
+                  <span class="rj45-port port-active"></span>
+                  <span class="rj45-port port-blink-fast"></span>
+                  <span class="rj45-port"></span>
+                </div>
+                <div class="switch-status-leds">
+                  <span class="rack-led led-green led-pulse"></span>
+                  <span class="rack-led led-amber led-flicker"></span>
+                </div>
+              </div>
+              <div class="unit-ears ear-right"><i></i></div>
+            </div>
+
+            <!-- 1U Unit: Blade Server / Primary Compute Node -->
+            <div class="server-unit unit-compute">
+              <div class="unit-ears ear-left"><i></i></div>
+              <div class="compute-panel">
+                <div class="drive-caddies">
+                  <div class="caddy"><span class="caddy-latch"></span><span class="caddy-led led-green blink-random-1"></span></div>
+                  <div class="caddy"><span class="caddy-latch"></span><span class="caddy-led led-green blink-random-2"></span></div>
+                  <div class="caddy"><span class="caddy-latch"></span><span class="caddy-led led-amber blink-random-3"></span></div>
+                  <div class="caddy"><span class="caddy-latch"></span><span class="caddy-led led-green blink-random-1"></span></div>
+                </div>
+                <div class="hex-vents">
+                  <span></span><span></span><span></span><span></span>
+                </div>
+              </div>
+              <div class="unit-ears ear-right"><i></i></div>
+            </div>
+
+            <!-- Dedicated Kinetic Power Unit (Hamster Wheel Module) -->
+            <div class="server-unit unit-generator">
+              <div class="unit-ears ear-left"><i></i></div>
+              <div class="generator-module">
+                <div class="generator-badge">
+                  <span class="gen-title">⚡ AUX-PWR CORE</span>
+                  <div class="power-meter" title="Power Output: 100%">
+                    <span class="bar-fill"></span>
+                  </div>
+                </div>
+                <div class="wheel-container">
+                  <svg class="hamster-wheel-scene" viewBox="0 0 120 120" role="img" aria-label="Animated pixel-art hamster running in a wheel" shape-rendering="crispEdges">
+            <!-- Wood Shavings Bedding -->
+            <g class="hw-bedding">
+              <rect x="12" y="112" width="4" height="2" fill="#F2C46D"/>
+              <rect x="18" y="114" width="3" height="2" fill="#F2C46D"/>
+              <rect x="28" y="113" width="4" height="2" fill="#F2C46D"/>
+              <rect x="36" y="115" width="5" height="2" fill="#F2C46D"/>
+              <rect x="48" y="113" width="4" height="2" fill="#F2C46D"/>
+              <rect x="58" y="114" width="5" height="2" fill="#F2C46D"/>
+              <rect x="70" y="113" width="4" height="2" fill="#F2C46D"/>
+              <rect x="82" y="115" width="4" height="2" fill="#F2C46D"/>
+              <rect x="94" y="113" width="5" height="2" fill="#F2C46D"/>
+              <rect x="102" y="114" width="4" height="2" fill="#F2C46D"/>
+              <rect x="15" y="113" width="4" height="2" fill="#D4A045"/>
+              <rect x="23" y="115" width="5" height="2" fill="#D4A045"/>
+              <rect x="32" y="112" width="3" height="2" fill="#D4A045"/>
+              <rect x="44" y="114" width="4" height="2" fill="#D4A045"/>
+              <rect x="54" y="112" width="4" height="2" fill="#D4A045"/>
+              <rect x="65" y="115" width="4" height="2" fill="#D4A045"/>
+              <rect x="76" y="112" width="5" height="2" fill="#D4A045"/>
+              <rect x="88" y="114" width="4" height="2" fill="#D4A045"/>
+              <rect x="98" y="115" width="4" height="2" fill="#D4A045"/>
+              <rect x="20" y="116" width="3" height="2" fill="#9E6727"/>
+              <rect x="40" y="116" width="4" height="2" fill="#9E6727"/>
+              <rect x="62" y="116" width="4" height="2" fill="#9E6727"/>
+              <rect x="85" y="116" width="3" height="2" fill="#9E6727"/>
+              <rect x="105" y="116" width="4" height="2" fill="#9E6727"/>
+            </g>
+
+            <!-- Dynamic Speed/Motion Marks -->
+            <g class="hw-motion-lines">
+              <path d="M 33 22 A 49 49 0 0 1 45 13" stroke="#FFFFFF" stroke-width="2" stroke-linecap="square" fill="none" stroke-dasharray="3 3"/>
+              <path d="M 23 34 A 53 53 0 0 1 35 22" stroke="#FFFFFF" stroke-width="2" stroke-linecap="square" fill="none" stroke-dasharray="3 3"/>
+              <path d="M 75 13 A 49 49 0 0 1 87 22" stroke="#FFFFFF" stroke-width="2" stroke-linecap="square" fill="none" stroke-dasharray="3 3"/>
+              <path d="M 85 22 A 53 53 0 0 1 97 34" stroke="#FFFFFF" stroke-width="2" stroke-linecap="square" fill="none" stroke-dasharray="3 3"/>
+              <path d="M 12 44 A 50 50 0 0 1 12 60" stroke="#FFFFFF" stroke-width="2" stroke-linecap="square" fill="none" stroke-dasharray="3 3"/>
+              <path d="M 7 47 A 55 55 0 0 1 7 57" stroke="#FFFFFF" stroke-width="2" stroke-linecap="square" fill="none" stroke-dasharray="3 3"/>
+              <path d="M 108 44 A 50 50 0 0 1 108 60" stroke="#FFFFFF" stroke-width="2" stroke-linecap="square" fill="none" stroke-dasharray="3 3"/>
+              <path d="M 113 47 A 55 55 0 0 1 113 57" stroke="#FFFFFF" stroke-width="2" stroke-linecap="square" fill="none" stroke-dasharray="3 3"/>
+            </g>
+
+            <!-- Stationary Stand -->
+            <g class="hw-stand">
+              <line x1="60" y1="52" x2="26" y2="108" stroke="#B0B0B0" stroke-width="3" stroke-linecap="square"/>
+              <line x1="60" y1="52" x2="94" y2="108" stroke="#B0B0B0" stroke-width="3" stroke-linecap="square"/>
+              <rect x="20" y="107" width="80" height="3" fill="#D0D0D0"/>
+              <rect x="20" y="106" width="5" height="5" fill="#888888"/>
+              <rect x="95" y="106" width="5" height="5" fill="#888888"/>
+            </g>
+
+            <!-- Rotating Wheel Component -->
+            <g class="hw-wheel-spinner">
+              <!-- Outer and Inner Concentric Rims -->
+              <circle cx="60" cy="52" r="44" stroke="#FFFFFF" stroke-width="2.5" fill="none"/>
+              <circle cx="60" cy="52" r="36" stroke="#FFFFFF" stroke-width="2" fill="none"/>
+              <!-- Rungs Around Perimeter (24 crossbars every 15deg) -->
+              <line x1="96" y1="52" x2="104" y2="52" transform="rotate(0 60 52)" stroke="#FFFFFF" stroke-width="2"/>
+              <line x1="96" y1="52" x2="104" y2="52" transform="rotate(15 60 52)" stroke="#FFFFFF" stroke-width="2"/>
+              <line x1="96" y1="52" x2="104" y2="52" transform="rotate(30 60 52)" stroke="#FFFFFF" stroke-width="2"/>
+              <line x1="96" y1="52" x2="104" y2="52" transform="rotate(45 60 52)" stroke="#FFFFFF" stroke-width="2"/>
+              <line x1="96" y1="52" x2="104" y2="52" transform="rotate(60 60 52)" stroke="#FFFFFF" stroke-width="2"/>
+              <line x1="96" y1="52" x2="104" y2="52" transform="rotate(75 60 52)" stroke="#FFFFFF" stroke-width="2"/>
+              <line x1="96" y1="52" x2="104" y2="52" transform="rotate(90 60 52)" stroke="#FFFFFF" stroke-width="2"/>
+              <line x1="96" y1="52" x2="104" y2="52" transform="rotate(105 60 52)" stroke="#FFFFFF" stroke-width="2"/>
+              <line x1="96" y1="52" x2="104" y2="52" transform="rotate(120 60 52)" stroke="#FFFFFF" stroke-width="2"/>
+              <line x1="96" y1="52" x2="104" y2="52" transform="rotate(135 60 52)" stroke="#FFFFFF" stroke-width="2"/>
+              <line x1="96" y1="52" x2="104" y2="52" transform="rotate(150 60 52)" stroke="#FFFFFF" stroke-width="2"/>
+              <line x1="96" y1="52" x2="104" y2="52" transform="rotate(165 60 52)" stroke="#FFFFFF" stroke-width="2"/>
+              <line x1="96" y1="52" x2="104" y2="52" transform="rotate(180 60 52)" stroke="#FFFFFF" stroke-width="2"/>
+              <line x1="96" y1="52" x2="104" y2="52" transform="rotate(195 60 52)" stroke="#FFFFFF" stroke-width="2"/>
+              <line x1="96" y1="52" x2="104" y2="52" transform="rotate(210 60 52)" stroke="#FFFFFF" stroke-width="2"/>
+              <line x1="96" y1="52" x2="104" y2="52" transform="rotate(225 60 52)" stroke="#FFFFFF" stroke-width="2"/>
+              <line x1="96" y1="52" x2="104" y2="52" transform="rotate(240 60 52)" stroke="#FFFFFF" stroke-width="2"/>
+              <line x1="96" y1="52" x2="104" y2="52" transform="rotate(255 60 52)" stroke="#FFFFFF" stroke-width="2"/>
+              <line x1="96" y1="52" x2="104" y2="52" transform="rotate(270 60 52)" stroke="#FFFFFF" stroke-width="2"/>
+              <line x1="96" y1="52" x2="104" y2="52" transform="rotate(285 60 52)" stroke="#FFFFFF" stroke-width="2"/>
+              <line x1="96" y1="52" x2="104" y2="52" transform="rotate(300 60 52)" stroke="#FFFFFF" stroke-width="2"/>
+              <line x1="96" y1="52" x2="104" y2="52" transform="rotate(315 60 52)" stroke="#FFFFFF" stroke-width="2"/>
+              <line x1="96" y1="52" x2="104" y2="52" transform="rotate(330 60 52)" stroke="#FFFFFF" stroke-width="2"/>
+              <line x1="96" y1="52" x2="104" y2="52" transform="rotate(345 60 52)" stroke="#FFFFFF" stroke-width="2"/>
+              <!-- 5 Radial Spokes (every 72deg) -->
+              <line x1="65.5" y1="52" x2="96" y2="52" transform="rotate(0 60 52)" stroke="#DDDDDD" stroke-width="2"/>
+              <line x1="65.5" y1="52" x2="96" y2="52" transform="rotate(72 60 52)" stroke="#DDDDDD" stroke-width="2"/>
+              <line x1="65.5" y1="52" x2="96" y2="52" transform="rotate(144 60 52)" stroke="#DDDDDD" stroke-width="2"/>
+              <line x1="65.5" y1="52" x2="96" y2="52" transform="rotate(216 60 52)" stroke="#DDDDDD" stroke-width="2"/>
+              <line x1="65.5" y1="52" x2="96" y2="52" transform="rotate(288 60 52)" stroke="#DDDDDD" stroke-width="2"/>
+              <!-- Center Hub -->
+              <circle cx="60" cy="52" r="5.5" fill="#C0C0C0" stroke="#FFFFFF" stroke-width="1.5"/>
+              <circle cx="60" cy="52" r="2" fill="#555555"/>
+            </g>
+
+            <!-- Front Axle Pin -->
+            <circle cx="60" cy="52" r="3" fill="#888888" stroke="#444444" stroke-width="0.8"/>
+            <circle cx="60" cy="52" r="1.2" fill="#FFFFFF"/>
+
+            <!-- Animated Pixel Art Hamster (Running inside bottom of wheel) -->
+            <g class="hw-hamster">
+              <!-- Frame 1: Reaching Stride (Front paws reaching forward, hind legs pushing) -->
+              <g class="hw-frame hw-frame-1">
+                <!-- Rump / Back Fur -->
+                <rect x="46" y="73" width="3" height="3.5" fill="#C4641E"/>
+                <rect x="47" y="71" width="3.5" height="3" fill="#D97A2B"/>
+                <rect x="45.5" y="74.5" width="2" height="2" fill="#FFA5A5"/> <!-- Tiny tail nub -->
+                <rect x="48.5" y="69.5" width="5.5" height="3" fill="#D97A2B"/>
+                <rect x="50" y="68" width="6" height="2.5" fill="#ED913D"/>
+                <rect x="54" y="67.5" width="6" height="2" fill="#F8A758"/>
+
+                <!-- Body Core & Back Coat -->
+                <rect x="48" y="72.5" width="6" height="6.5" fill="#DE7E2F"/>
+                <rect x="53" y="70" width="7" height="8" fill="#ED913D"/>
+                <rect x="52" y="69" width="7" height="2" fill="#F8A758"/>
+
+                <!-- Golden/Orange Cheek & Head -->
+                <rect x="62" y="66.5" width="6.5" height="4.5" fill="#DE7E2F"/>
+                <rect x="64" y="65.5" width="4.5" height="2" fill="#ED913D"/>
+                <rect x="68" y="67.5" width="4.5" height="4" fill="#ED913D"/>
+                
+                <!-- Cute Round Ears (Front & Back) -->
+                <rect x="58.5" y="64" width="2.5" height="3" fill="#C4641E"/>
+                <rect x="59.5" y="64.5" width="1.5" height="2" fill="#FFB4B4"/>
+                <rect x="63.5" y="63" width="3" height="3.5" fill="#DE7E2F"/>
+                <rect x="64.5" y="63.5" width="2" height="2.5" fill="#FFB4B4"/>
+
+                <!-- White Underbelly & Fluffy White Cheek Patch -->
+                <rect x="53" y="78" width="9" height="3" fill="#F5F5F5"/>
+                <rect x="59" y="72" width="6.5" height="7" fill="#FFFFFF"/>
+                <rect x="65" y="71.5" width="4.5" height="5.5" fill="#FFFFFF"/>
+                <rect x="69" y="73" width="3" height="3.5" fill="#FFFFFF"/>
+
+                <!-- Snout & Whisker Spot -->
+                <rect x="72.5" y="70.5" width="3" height="3" fill="#FCECE2"/>
+                <rect x="75" y="70.5" width="1.5" height="1.5" fill="#FFA5A5"/> <!-- Pink nose -->
+                <rect x="71" y="73.5" width="3" height="1.5" fill="#FFFFFF"/>
+
+                <!-- Large Glossy Black Hamster Eye -->
+                <rect x="66" y="67.5" width="2.5" height="2.5" rx="0.5" fill="#151515"/>
+                <rect x="66.3" y="67.7" width="1" height="1" fill="#FFFFFF"/>
+
+                <!-- Little Front Paws (Reaching forward) -->
+                <rect x="69" y="77" width="2" height="3" fill="#FFFFFF"/>
+                <rect x="70.5" y="79" width="3" height="1.8" rx="0.5" fill="#FFAAA8"/>
+                <rect x="64" y="77" width="2" height="2.5" fill="#EDE4DC"/>
+                <rect x="64.5" y="78.5" width="2.5" height="1.5" fill="#FFAAA8"/>
+
+                <!-- Little Back Paws (Pushing back) -->
+                <rect x="47.5" y="78.5" width="2.5" height="2" fill="#D97A2B"/>
+                <rect x="46" y="80" width="3.5" height="1.8" rx="0.5" fill="#FFAAA8"/>
+                <rect x="51" y="78" width="2.5" height="2.5" fill="#C4641E"/>
+                <rect x="50" y="80" width="3" height="1.8" rx="0.5" fill="#FFAAA8"/>
+              </g>
+
+              <!-- Frame 2: Touchdown / Compacted Impact (Cheeks squish slightly, paws on ground) -->
+              <g class="hw-frame hw-frame-2" transform="translate(0, 1)">
+                <!-- Rump / Back Fur -->
+                <rect x="46" y="72" width="3.5" height="4" fill="#C4641E"/>
+                <rect x="47.5" y="70.5" width="3.5" height="3" fill="#D97A2B"/>
+                <rect x="45" y="74" width="2" height="2" fill="#FFA5A5"/> <!-- Tail -->
+                <rect x="49" y="69" width="5.5" height="3" fill="#D97A2B"/>
+                <rect x="51" y="67.5" width="6" height="2.5" fill="#ED913D"/>
+                <rect x="55" y="67" width="6" height="2" fill="#F8A758"/>
+
+                <!-- Body Core & Back Coat -->
+                <rect x="48.5" y="72" width="6.5" height="6.5" fill="#DE7E2F"/>
+                <rect x="54" y="69.5" width="7" height="8" fill="#ED913D"/>
+                <rect x="53" y="68.5" width="7" height="2" fill="#F8A758"/>
+
+                <!-- Golden/Orange Cheek & Head -->
+                <rect x="63" y="66" width="6.5" height="5" fill="#DE7E2F"/>
+                <rect x="65" y="65" width="4.5" height="2" fill="#ED913D"/>
+                <rect x="69" y="67" width="4.5" height="4" fill="#ED913D"/>
+                
+                <!-- Cute Round Ears -->
+                <rect x="59.5" y="63.5" width="2.5" height="3" fill="#C4641E"/>
+                <rect x="60.5" y="64" width="1.5" height="2" fill="#FFB4B4"/>
+                <rect x="64.5" y="62.5" width="3" height="3.5" fill="#DE7E2F"/>
+                <rect x="65.5" y="63" width="2" height="2.5" fill="#FFB4B4"/>
+
+                <!-- White Underbelly & Chubby White Cheek -->
+                <rect x="53.5" y="77.5" width="9.5" height="3.5" fill="#F5F5F5"/>
+                <rect x="60" y="71.5" width="7" height="7.5" fill="#FFFFFF"/>
+                <rect x="66" y="71" width="5" height="6" fill="#FFFFFF"/>
+                <rect x="70" y="72.5" width="3" height="4" fill="#FFFFFF"/>
+
+                <!-- Snout & Whisker Spot -->
+                <rect x="73.5" y="70" width="3" height="3" fill="#FCECE2"/>
+                <rect x="76" y="70" width="1.5" height="1.5" fill="#FFA5A5"/>
+                <rect x="72" y="73" width="3" height="1.5" fill="#FFFFFF"/>
+
+                <!-- Large Glossy Black Hamster Eye -->
+                <rect x="67" y="67" width="2.5" height="2.5" rx="0.5" fill="#151515"/>
+                <rect x="67.3" y="67.2" width="1" height="1" fill="#FFFFFF"/>
+
+                <!-- Planted Paws -->
+                <rect x="67" y="77" width="2.5" height="3" fill="#FFFFFF"/>
+                <rect x="67" y="79.5" width="3" height="1.8" rx="0.5" fill="#FFAAA8"/>
+                <rect x="52" y="77.5" width="2.5" height="2.5" fill="#D97A2B"/>
+                <rect x="51" y="79.5" width="3" height="1.8" rx="0.5" fill="#FFAAA8"/>
+              </g>
+
+              <!-- Frame 3: Drive / Push-off (Propelling body forward, rear paw extended down) -->
+              <g class="hw-frame hw-frame-3" transform="translate(0, -0.8)">
+                <!-- Rump / Back Fur -->
+                <rect x="46.5" y="72.5" width="3" height="3.5" fill="#C4641E"/>
+                <rect x="47.5" y="70.5" width="3.5" height="3" fill="#D97A2B"/>
+                <rect x="45.5" y="73.5" width="2" height="2" fill="#FFA5A5"/> <!-- Tail -->
+                <rect x="49" y="69" width="5.5" height="3" fill="#D97A2B"/>
+                <rect x="50.5" y="67.5" width="6" height="2.5" fill="#ED913D"/>
+                <rect x="54.5" y="67" width="6" height="2" fill="#F8A758"/>
+
+                <!-- Body Core & Back Coat -->
+                <rect x="48.5" y="72" width="6" height="6.5" fill="#DE7E2F"/>
+                <rect x="53.5" y="69.5" width="7" height="8" fill="#ED913D"/>
+                <rect x="52.5" y="68.5" width="7" height="2" fill="#F8A758"/>
+
+                <!-- Golden/Orange Cheek & Head -->
+                <rect x="62.5" y="66" width="6.5" height="4.5" fill="#DE7E2F"/>
+                <rect x="64.5" y="65" width="4.5" height="2" fill="#ED913D"/>
+                <rect x="68.5" y="67" width="4.5" height="4" fill="#ED913D"/>
+                
+                <!-- Cute Round Ears (pinned slightly for speed) -->
+                <rect x="58" y="64.5" width="2.5" height="2.8" fill="#C4641E"/>
+                <rect x="59" y="65" width="1.5" height="1.8" fill="#FFB4B4"/>
+                <rect x="63" y="63.5" width="3" height="3.2" fill="#DE7E2F"/>
+                <rect x="64" y="64" width="2" height="2" fill="#FFB4B4"/>
+
+                <!-- White Underbelly & Chubby White Cheek -->
+                <rect x="53" y="77.5" width="9" height="3" fill="#F5F5F5"/>
+                <rect x="59.5" y="71.5" width="6.5" height="7" fill="#FFFFFF"/>
+                <rect x="65.5" y="71" width="4.5" height="5.5" fill="#FFFFFF"/>
+                <rect x="69.5" y="72.5" width="3" height="3.5" fill="#FFFFFF"/>
+
+                <!-- Snout & Whisker Spot -->
+                <rect x="73" y="70" width="3" height="3" fill="#FCECE2"/>
+                <rect x="75.5" y="70" width="1.5" height="1.5" fill="#FFA5A5"/>
+                <rect x="71.5" y="73" width="3" height="1.5" fill="#FFFFFF"/>
+
+                <!-- Large Glossy Black Hamster Eye -->
+                <rect x="66.5" y="67" width="2.5" height="2.5" rx="0.5" fill="#151515"/>
+                <rect x="66.8" y="67.2" width="1" height="1" fill="#FFFFFF"/>
+
+                <!-- Legs (Front tucked in stride, Rear driving straight down) -->
+                <rect x="64.5" y="77" width="2.2" height="2.5" fill="#FFFFFF"/>
+                <rect x="64" y="79" width="2.5" height="1.5" fill="#FFAAA8"/>
+                <rect x="50" y="78" width="2.5" height="3.5" fill="#DE7E2F"/>
+                <rect x="49" y="81" width="3" height="1.8" rx="0.5" fill="#FFAAA8"/>
+              </g>
+
+              <!-- Frame 4: Extension / Full Gallop (Airborne stretch, rear kicking up, front reaching) -->
+              <g class="hw-frame hw-frame-4">
+                <!-- Rump / Back Fur -->
+                <rect x="47" y="72" width="3" height="3.5" fill="#C4641E"/>
+                <rect x="48" y="70" width="3.5" height="3" fill="#D97A2B"/>
+                <rect x="45.5" y="73" width="2" height="2" fill="#FFA5A5"/> <!-- Tail -->
+                <rect x="49.5" y="68.5" width="5.5" height="3" fill="#D97A2B"/>
+                <rect x="51" y="67" width="6" height="2.5" fill="#ED913D"/>
+                <rect x="55" y="66.5" width="6" height="2" fill="#F8A758"/>
+
+                <!-- Body Core & Back Coat -->
+                <rect x="49" y="71.5" width="6" height="6.5" fill="#DE7E2F"/>
+                <rect x="54" y="69" width="7" height="8" fill="#ED913D"/>
+                <rect x="53" y="68" width="7" height="2" fill="#F8A758"/>
+
+                <!-- Golden/Orange Cheek & Head -->
+                <rect x="63" y="65.5" width="6.5" height="4.5" fill="#DE7E2F"/>
+                <rect x="65" y="64.5" width="4.5" height="2" fill="#ED913D"/>
+                <rect x="69" y="66.5" width="4.5" height="4" fill="#ED913D"/>
+                
+                <!-- Cute Round Ears -->
+                <rect x="59" y="63" width="2.5" height="3" fill="#C4641E"/>
+                <rect x="60" y="63.5" width="1.5" height="2" fill="#FFB4B4"/>
+                <rect x="64" y="62" width="3" height="3.5" fill="#DE7E2F"/>
+                <rect x="65" y="62.5" width="2" height="2.5" fill="#FFB4B4"/>
+
+                <!-- White Underbelly & Fluffy White Cheek Patch -->
+                <rect x="54" y="77" width="9" height="3" fill="#F5F5F5"/>
+                <rect x="60" y="71" width="6.5" height="7" fill="#FFFFFF"/>
+                <rect x="66" y="70.5" width="4.5" height="5.5" fill="#FFFFFF"/>
+                <rect x="70" y="72" width="3" height="3.5" fill="#FFFFFF"/>
+
+                <!-- Snout & Pink Nose -->
+                <rect x="73.5" y="69.5" width="3" height="3" fill="#FCECE2"/>
+                <rect x="76" y="69.5" width="1.5" height="1.5" fill="#FFA5A5"/>
+                <rect x="72" y="72.5" width="3" height="1.5" fill="#FFFFFF"/>
+
+                <!-- Large Glossy Black Hamster Eye -->
+                <rect x="67" y="66.5" width="2.5" height="2.5" rx="0.5" fill="#151515"/>
+                <rect x="67.3" y="66.7" width="1" height="1" fill="#FFFFFF"/>
+
+                <!-- Paws (Rear kicking high behind, Front paw stretched forward) -->
+                <rect x="47" y="77" width="2.5" height="2.5" fill="#C4641E"/>
+                <rect x="45" y="76.5" width="2.5" height="1.8" rx="0.5" fill="#FFAAA8"/>
+                <rect x="70.5" y="76.5" width="2.2" height="2.8" fill="#FFFFFF"/>
+                <rect x="72.5" y="78" width="3" height="1.8" rx="0.5" fill="#FFAAA8"/>
+              </g>
+            </g>
+          </svg>
+        </div>
+              </div>
+              <div class="unit-ears ear-right"><i></i></div>
+            </div>
+
+            <!-- 1U Unit: High-Capacity Storage Array -->
+            <div class="server-unit unit-storage">
+              <div class="unit-ears ear-left"><i></i></div>
+              <div class="storage-panel">
+                <div class="storage-trays">
+                  <div class="tray"><span class="tray-handle"></span><span class="tray-led led-green blink-random-2"></span></div>
+                  <div class="tray"><span class="tray-handle"></span><span class="tray-led led-green blink-random-3"></span></div>
+                  <div class="tray"><span class="tray-handle"></span><span class="tray-led led-green blink-random-1"></span></div>
+                </div>
+                <div class="storage-grille">
+                  <span></span><span></span><span></span>
+                </div>
+              </div>
+              <div class="unit-ears ear-right"><i></i></div>
+            </div>
+
+            <!-- 1U Unit: Power Distribution / UPS -->
+            <div class="server-unit unit-pdu">
+              <div class="unit-ears ear-left"><i></i></div>
+              <div class="pdu-panel">
+                <div class="pdu-load">
+                  <span class="pdu-bar active"></span>
+                  <span class="pdu-bar active"></span>
+                  <span class="pdu-bar active"></span>
+                  <span class="pdu-bar active"></span>
+                  <span class="pdu-bar"></span>
+                </div>
+                <div class="pdu-switch" title="Master Breaker: ON">
+                  <span class="switch-rocker"></span>
+                </div>
+              </div>
+              <div class="unit-ears ear-right"><i></i></div>
+            </div>
+          </div>
+
+          <!-- Right Mounting Rail with EIA-310 Unit Holes -->
+          <div class="rack-rail rack-rail-right" aria-hidden="true">
+            <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+          </div>
+        </div>
+
+        <!-- Sturdy Base Feet / Levelers -->
+        <div class="rack-feet" aria-hidden="true">
+          <span class="rack-foot"></span>
+          <span class="rack-foot"></span>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <nav>
     <div class="nav-brand">LukeMonroe.dev</div>
-    <div class="nav-links">
-      <a href="./">Home</a>
-      <a href="./links">Links</a>
-      <a href="./contact">Contact</a>
+    <div class="nav-actions">
       <button id="hacker-toggle" class="btn theme-toggle" type="button" aria-label="Switch to hacker mode" title="Switch to hacker mode">
         <i class="fa-solid fa-moon" aria-hidden="true"></i>
       </button>
+      <button id="burger-toggle" class="btn menu-toggle" type="button" aria-label="Toggle navigation menu" aria-expanded="false" title="Toggle navigation menu">
+        <i class="fa-solid fa-bars" aria-hidden="true"></i>
+      </button>
+    </div>
+    <div class="nav-links" id="nav-links">
+      <a href="./">Home</a>
+      <a href="./links">Links</a>
+      <a href="./contact">Contact</a>
     </div>
   </nav>
 
   <main>
     <!-- Top Section -->
-    <section style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 2rem; margin-bottom: 6rem;">
+    <section class="hero-section" style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 2rem; margin-bottom: 6rem;">
       
       <!-- Text Area -->
-      <div style="flex: 1; min-width: 300px; max-width: 500px;">
+      <div class="hero-text" style="flex: 1; min-width: 300px; max-width: 500px;">
         <p>
           Hey there! I'm Luke. I'm a computer science major that's obsessed with finding (or making) the best and most cost effective software solutions. Check out my LinkedIn or GitHub <a href="./links">here</a>.
         </p>
@@ -38,7 +515,7 @@
         <div class="profile-card-body">
           <ul>
             <li>Computer Science Major</li>
-            <li>Linux User (I use NixOs, btw)</li>
+            <li>Linux User (I use NixOS, btw)</li>
           </ul>
         </div>
       </div>
@@ -46,10 +523,10 @@
     </section>
 
     <!-- Bottom Section -->
-    <section style="display: flex; flex-wrap: wrap; align-items: center; gap: 4rem;">
+    <section class="status-section" style="display: flex; flex-wrap: wrap; align-items: center; gap: 4rem;">
       <!-- Placeholder for the graduation cap graphic -->
-      <img src="./assets/hat.webp" alt="Graduation Cap" style="max-width: 200px; width: 100%; height: auto;">
-      <div>
+      <img class="status-img" src="./assets/hat.webp" alt="Graduation Cap" style="max-width: 200px; width: 100%; height: auto;">
+      <div class="status-text">
         <h2 style="margin-top: 0;">Current Status:</h2>
         <p style="max-width: 400px;">
           I am pursuing a Bachelors in Computer Science from Andrews University.
@@ -61,20 +538,91 @@
   <script>
     const toggleBtn = document.getElementById('hacker-toggle');
     const toggleIcon = toggleBtn.querySelector('i');
-    
-    toggleBtn.addEventListener('click', () => {
-      const isHacker = document.body.getAttribute('data-theme') === 'hacker';
+
+    const updateThemeUI = (isHacker) => {
+      toggleIcon.className = isHacker ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+      toggleBtn.setAttribute('aria-label', isHacker ? 'Switch to light mode' : 'Switch to hacker mode');
+      toggleBtn.setAttribute('title', isHacker ? 'Switch to light mode' : 'Switch to hacker mode');
+    };
+
+    const setTheme = (isHacker, broadcast = true) => {
       if (isHacker) {
-        document.body.removeAttribute('data-theme');
-      } else {
         document.body.setAttribute('data-theme', 'hacker');
+        document.documentElement.setAttribute('data-theme', 'hacker');
+        localStorage.setItem('theme', 'hacker');
+        updateThemeUI(true);
+      } else {
+        document.body.removeAttribute('data-theme');
+        document.documentElement.removeAttribute('data-theme');
+        localStorage.removeItem('theme');
+        updateThemeUI(false);
       }
 
-      const nextIsHacker = document.body.getAttribute('data-theme') === 'hacker';
-      toggleIcon.className = nextIsHacker ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
-      toggleBtn.setAttribute('aria-label', nextIsHacker ? 'Switch to light mode' : 'Switch to hacker mode');
-      toggleBtn.setAttribute('title', nextIsHacker ? 'Switch to light mode' : 'Switch to hacker mode');
+      if (broadcast) {
+        // If inside an iframe, tell the parent
+        if (window.parent && window.parent !== window) {
+          window.parent.postMessage({ type: 'SET_THEME', theme: isHacker ? 'hacker' : 'light' }, '*');
+        }
+        // If this is the parent, tell any iframe preview
+        const iframe = document.getElementById('styled-iframe');
+        if (iframe && iframe.contentWindow) {
+          iframe.contentWindow.postMessage({ type: 'SET_THEME', theme: isHacker ? 'hacker' : 'light' }, '*');
+        }
+      }
+    };
+
+    if (localStorage.getItem('theme') === 'hacker') {
+      document.body.setAttribute('data-theme', 'hacker');
+      document.documentElement.setAttribute('data-theme', 'hacker');
+      updateThemeUI(true);
+    }
+    
+    toggleBtn.addEventListener('click', () => {
+      const isHacker = document.body.getAttribute('data-theme') === 'hacker' || document.documentElement.getAttribute('data-theme') === 'hacker';
+      setTheme(!isHacker, true);
     });
+
+    window.addEventListener('message', (event) => {
+      if (event.data && event.data.type === 'SET_THEME') {
+        const wantsHacker = event.data.theme === 'hacker';
+        const isCurrentHacker = document.body.getAttribute('data-theme') === 'hacker' || document.documentElement.getAttribute('data-theme') === 'hacker';
+        if (wantsHacker !== isCurrentHacker) {
+          setTheme(wantsHacker, false);
+        }
+      }
+    });
+
+    const burgerBtn = document.getElementById('burger-toggle');
+    const navLinks = document.getElementById('nav-links');
+    if (burgerBtn && navLinks) {
+      burgerBtn.addEventListener('click', () => {
+        const isOpen = navLinks.classList.toggle('nav-open');
+        burgerBtn.setAttribute('aria-expanded', isOpen);
+        const icon = burgerBtn.querySelector('i');
+        if (icon) {
+          icon.className = isOpen ? 'fa-solid fa-xmark' : 'fa-solid fa-bars';
+        }
+      });
+
+      document.addEventListener('click', (e) => {
+        if (!burgerBtn.contains(e.target) && !navLinks.contains(e.target) && navLinks.classList.contains('nav-open')) {
+          navLinks.classList.remove('nav-open');
+          burgerBtn.setAttribute('aria-expanded', 'false');
+          const icon = burgerBtn.querySelector('i');
+          if (icon) icon.className = 'fa-solid fa-bars';
+        }
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && navLinks.classList.contains('nav-open')) {
+          navLinks.classList.remove('nav-open');
+          burgerBtn.setAttribute('aria-expanded', 'false');
+          const icon = burgerBtn.querySelector('i');
+          if (icon) icon.className = 'fa-solid fa-bars';
+        }
+      });
+    }
   </script>
+  <script src="./scripts/cutscene.js"></script>
 </body>
 </html>
