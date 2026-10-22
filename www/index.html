@@ -10,11 +10,20 @@
     if (localStorage.getItem('theme') === 'hacker') {
       document.documentElement.setAttribute('data-theme', 'hacker');
     }
-    const navEntry = performance.getEntriesByType?.('navigation')?.[0];
-    const isReload = navEntry ? navEntry.type === 'reload' : (performance.navigation && performance.navigation.type === 1);
-    if (isReload) {
-      sessionStorage.removeItem('cutscene_shown');
-    }
+    // Listen for manual hard-refresh keyboard shortcuts (Shift+F5, Ctrl+F5, Ctrl+Shift+R, Cmd+Shift+R)
+    window.addEventListener('keydown', (e) => {
+      const isF5HardReload = e.key === 'F5' && (e.shiftKey || e.ctrlKey);
+      const isRHardReload = (e.key === 'r' || e.key === 'R') && (e.ctrlKey || e.metaKey) && e.shiftKey;
+      if (isF5HardReload || isRHardReload) {
+        sessionStorage.removeItem('cutscene_shown');
+      }
+    });
+
+    // Check if the cutscene should be skipped:
+    // - If URL has ?no-cutscene
+    // - Or if cutscene was already shown in this tab session
+    // Note: sessionStorage persists through normal refreshes (F5) and internal navigations ("Home" link),
+    // ensuring the cutscene does NOT re-trigger on normal reloads or link clicks.
     if (window.location.search.includes('no-cutscene') || sessionStorage.getItem('cutscene_shown')) {
       document.documentElement.classList.add('no-cutscene');
     }
