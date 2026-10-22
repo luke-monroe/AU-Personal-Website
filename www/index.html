@@ -34,13 +34,75 @@
         <div id="packet-text">Initializing...</div>
       </div>
 
-      <!-- Right: Server -->
-      <div id="server-rack">
-        <div class="server-blinkenlights">
-          <span></span><span></span><span></span>
+      <!-- Right: Server Rack -->
+      <div id="server-rack" role="region" aria-label="Datacenter server rack with kinetic power core">
+        <!-- Rack Top Header with Status & Model Label -->
+        <div class="rack-header">
+          <span class="rack-label">SRV-NODE-01</span>
+          <div class="rack-header-leds">
+            <span class="rack-led led-green" title="Power"></span>
+            <span class="rack-led led-amber blink-fast" title="Activity"></span>
+          </div>
         </div>
-        <div class="wheel-container">
-          <svg class="hamster-wheel-scene" viewBox="0 0 120 120" role="img" aria-label="Animated pixel-art hamster running in a wheel" shape-rendering="crispEdges">
+
+        <!-- Main Rack Enclosure with Mounting Rails and Chassis Stack -->
+        <div class="rack-body">
+          <!-- Left Mounting Rail with EIA-310 Unit Holes -->
+          <div class="rack-rail rack-rail-left" aria-hidden="true">
+            <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+          </div>
+
+          <!-- Vertical Stack of Server Chassis Units -->
+          <div class="rack-chassis-stack">
+            <!-- 1U Top Unit: Network Switch & Patch Panel -->
+            <div class="server-unit unit-switch">
+              <div class="unit-ears ear-left"><i></i></div>
+              <div class="switch-panel">
+                <div class="rj45-bank">
+                  <span class="rj45-port port-active"></span>
+                  <span class="rj45-port port-active port-blink"></span>
+                  <span class="rj45-port"></span>
+                  <span class="rj45-port port-active"></span>
+                  <span class="rj45-port port-blink-fast"></span>
+                  <span class="rj45-port"></span>
+                </div>
+                <div class="switch-status-leds">
+                  <span class="rack-led led-green led-pulse"></span>
+                  <span class="rack-led led-amber led-flicker"></span>
+                </div>
+              </div>
+              <div class="unit-ears ear-right"><i></i></div>
+            </div>
+
+            <!-- 1U Unit: Blade Server / Primary Compute Node -->
+            <div class="server-unit unit-compute">
+              <div class="unit-ears ear-left"><i></i></div>
+              <div class="compute-panel">
+                <div class="drive-caddies">
+                  <div class="caddy"><span class="caddy-latch"></span><span class="caddy-led led-green blink-random-1"></span></div>
+                  <div class="caddy"><span class="caddy-latch"></span><span class="caddy-led led-green blink-random-2"></span></div>
+                  <div class="caddy"><span class="caddy-latch"></span><span class="caddy-led led-amber blink-random-3"></span></div>
+                  <div class="caddy"><span class="caddy-latch"></span><span class="caddy-led led-green blink-random-1"></span></div>
+                </div>
+                <div class="hex-vents">
+                  <span></span><span></span><span></span><span></span>
+                </div>
+              </div>
+              <div class="unit-ears ear-right"><i></i></div>
+            </div>
+
+            <!-- Dedicated Kinetic Power Unit (Hamster Wheel Module) -->
+            <div class="server-unit unit-generator">
+              <div class="unit-ears ear-left"><i></i></div>
+              <div class="generator-module">
+                <div class="generator-badge">
+                  <span class="gen-title">⚡ AUX-PWR CORE</span>
+                  <div class="power-meter" title="Power Output: 100%">
+                    <span class="bar-fill"></span>
+                  </div>
+                </div>
+                <div class="wheel-container">
+                  <svg class="hamster-wheel-scene" viewBox="0 0 120 120" role="img" aria-label="Animated pixel-art hamster running in a wheel" shape-rendering="crispEdges">
             <!-- Wood Shavings Bedding -->
             <g class="hw-bedding">
               <rect x="12" y="112" width="4" height="2" fill="#F2C46D"/>
@@ -258,6 +320,56 @@
               </g>
             </g>
           </svg>
+        </div>
+              </div>
+              <div class="unit-ears ear-right"><i></i></div>
+            </div>
+
+            <!-- 1U Unit: High-Capacity Storage Array -->
+            <div class="server-unit unit-storage">
+              <div class="unit-ears ear-left"><i></i></div>
+              <div class="storage-panel">
+                <div class="storage-trays">
+                  <div class="tray"><span class="tray-handle"></span><span class="tray-led led-green blink-random-2"></span></div>
+                  <div class="tray"><span class="tray-handle"></span><span class="tray-led led-green blink-random-3"></span></div>
+                  <div class="tray"><span class="tray-handle"></span><span class="tray-led led-green blink-random-1"></span></div>
+                </div>
+                <div class="storage-grille">
+                  <span></span><span></span><span></span>
+                </div>
+              </div>
+              <div class="unit-ears ear-right"><i></i></div>
+            </div>
+
+            <!-- 1U Unit: Power Distribution / UPS -->
+            <div class="server-unit unit-pdu">
+              <div class="unit-ears ear-left"><i></i></div>
+              <div class="pdu-panel">
+                <div class="pdu-load">
+                  <span class="pdu-bar active"></span>
+                  <span class="pdu-bar active"></span>
+                  <span class="pdu-bar active"></span>
+                  <span class="pdu-bar active"></span>
+                  <span class="pdu-bar"></span>
+                </div>
+                <div class="pdu-switch" title="Master Breaker: ON">
+                  <span class="switch-rocker"></span>
+                </div>
+              </div>
+              <div class="unit-ears ear-right"><i></i></div>
+            </div>
+          </div>
+
+          <!-- Right Mounting Rail with EIA-310 Unit Holes -->
+          <div class="rack-rail rack-rail-right" aria-hidden="true">
+            <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+          </div>
+        </div>
+
+        <!-- Sturdy Base Feet / Levelers -->
+        <div class="rack-feet" aria-hidden="true">
+          <span class="rack-foot"></span>
+          <span class="rack-foot"></span>
         </div>
       </div>
     </div>
