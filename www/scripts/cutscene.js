@@ -198,7 +198,7 @@ function initMatrixCanvas() {
   window.addEventListener('resize', resize);
   resize();
 
-  const letters = '01ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+  const letters = ['0', '1'];
   const fontSize = 14;
   let columns = Math.floor(canvas.width / fontSize);
   let drops = Array.from({ length: columns }).fill(1);
