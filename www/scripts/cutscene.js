@@ -1,13 +1,16 @@
 let matrixIntervalId = null;
 let isSkipped = false;
 
-document.addEventListener('DOMContentLoaded', () => {
-  const navEntry = performance.getEntriesByType?.('navigation')?.[0];
-  const isReload = navEntry ? navEntry.type === 'reload' : (performance.navigation && performance.navigation.type === 1);
-  if (isReload) {
+// Listen for manual hard-refresh keyboard shortcuts (Shift+F5, Ctrl+F5, Ctrl+Shift+R, Cmd+Shift+R)
+window.addEventListener('keydown', (e) => {
+  const isF5HardReload = e.key === 'F5' && (e.shiftKey || e.ctrlKey);
+  const isRHardReload = (e.key === 'r' || e.key === 'R') && (e.ctrlKey || e.metaKey) && e.shiftKey;
+  if (isF5HardReload || isRHardReload) {
     sessionStorage.removeItem('cutscene_shown');
   }
+});
 
+document.addEventListener('DOMContentLoaded', () => {
   // Check if we should skip via URL (e.g., iframe source ?no-cutscene=true)
   // or if it has already played during this browser session
   if (window.location.search.includes('no-cutscene') || sessionStorage.getItem('cutscene_shown')) {
