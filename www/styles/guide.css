@@ -294,17 +294,27 @@ a { color: var(--text-main); }
 
 #unstyled-preview {
   z-index: 2;
-  padding: 2rem;
+  padding: 1.25rem;
   background: #fff;
-  color: #000;
+  color: #111;
   opacity: 0;
   overflow: hidden;
   transition: opacity 1.5s ease;
+  font-family: 'Courier New', Courier, monospace;
 }
 
-#unstyled-preview a {
-  color: #00e;
-  text-decoration: underline;
+#unstyled-preview pre {
+  margin: 0;
+  font-family: inherit;
+  font-size: clamp(0.6rem, 1.1vw, 0.78rem);
+  line-height: 1.35;
+  white-space: pre-wrap;
+  word-break: break-all;
+  color: #1a1a1a;
+}
+
+#unstyled-preview code {
+  font-family: inherit;
 }
 
 #styled-iframe {

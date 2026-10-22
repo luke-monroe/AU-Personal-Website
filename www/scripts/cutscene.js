@@ -50,7 +50,7 @@ async function runCutsceneSequence() {
   unstyled.style.opacity = '1'; // Reveal raw HTML
   await wait(1500);
 
-  // -- Step 3: Request CSS (9.5s - 15.5s) --
+  // -- Step 3: Request CSS --
   if (isSkipped) return;
   packetText.innerText = "GET /guide.css";
   packet.style.animation = "none"; void packet.offsetWidth;
@@ -64,11 +64,25 @@ async function runCutsceneSequence() {
   await wait(1500);
 
   if (isSkipped) return;
-  styled.style.opacity = '1'; // Fade in iframe
-  unstyled.classList.add('preview-fade-out'); // Crossfade out unstyled
-  await wait(2500);
+  styled.style.opacity = '1'; // Reveal 1:1 styled preview
+  unstyled.classList.add('preview-fade-out'); // Crossfade out raw HTML
+  await wait(1500);
 
-  // -- Step 4: Expand smoothly from the PC viewport to the full page --
+  // -- Step 4: Request Images --
+  if (isSkipped) return;
+  packetText.innerText = "GET /assets/luke.webp";
+  packet.style.animation = "none"; void packet.offsetWidth;
+  packet.style.animation = "reqPacket 1.5s ease-in-out forwards";
+  await wait(1800);
+
+  if (isSkipped) return;
+  packetText.innerText = "200 OK (image/webp)";
+  packet.style.animation = "none"; void packet.offsetWidth;
+  packet.style.animation = "sendPacket 1.5s ease-in-out forwards";
+  await wait(1500);
+  await wait(1200);
+
+  // -- Step 5: Expand smoothly from the PC viewport to the full page --
   if (isSkipped) return;
 
   const serverRack = document.getElementById('server-rack');
