@@ -21,66 +21,76 @@ async function runCutsceneSequence() {
   const unstyled = document.getElementById('unstyled-preview');
   const styled = document.getElementById('styled-iframe');
   
-  // -- Step 1: Network Handshake (0s - 4.5s) --
-  await wait(500);
-  if (isSkipped) return;
-  packetText.innerText = "SYN (DNS Lookup)";
-  packet.style.animation = "reqPacket 1.5s ease-in-out forwards";
-  await wait(1800);
-  
-  if (isSkipped) return;
-  packetText.innerText = "ACK";
-  packet.style.animation = "sendPacket 1.5s ease-in-out forwards";
-  await wait(1800);
+  const sendPacketAnim = (text, direction = 'req', duration = 1.0) => {
+    packetText.innerText = text;
+    packet.style.animation = "none";
+    void packet.offsetWidth;
+    packet.style.animation = `${direction === 'req' ? 'reqPacket' : 'sendPacket'} ${duration}s ease-in-out forwards`;
+  };
 
-  // -- Step 2: Request Raw HTML (4.5s - 9.5s) --
+  // -- Step 1: TCP 3-Way Handshake --
+  await wait(400);
   if (isSkipped) return;
-  packetText.innerText = "GET /index.html";
-  packet.style.animation = "none"; void packet.offsetWidth; // reset anim
-  packet.style.animation = "reqPacket 1.5s ease-in-out forwards";
-  await wait(1800);
+  sendPacketAnim("TCP [SYN] Port 443", 'req', 1.1);
+  await wait(1250);
 
   if (isSkipped) return;
-  packetText.innerText = "200 OK (text/html)";
-  packet.style.animation = "none"; void packet.offsetWidth;
-  packet.style.animation = "sendPacket 1.5s ease-in-out forwards";
-  await wait(1500);
-  
+  sendPacketAnim("TCP [SYN, ACK]", 'send', 1.1);
+  await wait(1250);
+
+  if (isSkipped) return;
+  sendPacketAnim("TCP [ACK]", 'req', 1.0);
+  await wait(1150);
+
+  // -- Step 2: TLS 1.3 Handshake --
+  if (isSkipped) return;
+  sendPacketAnim("TLS 1.3 Client Hello", 'req', 1.1);
+  await wait(1250);
+
+  if (isSkipped) return;
+  sendPacketAnim("TLS Server Hello + Cert", 'send', 1.1);
+  await wait(1250);
+
+  if (isSkipped) return;
+  sendPacketAnim("TLS Handshake Complete", 'send', 1.0);
+  await wait(1150);
+
+  // -- Step 3: HTTP Document (HTML) --
+  if (isSkipped) return;
+  sendPacketAnim("GET /index.html", 'req', 1.2);
+  await wait(1350);
+
+  if (isSkipped) return;
+  sendPacketAnim("200 OK (text/html)", 'send', 1.2);
+  await wait(1100);
+
   if (isSkipped) return;
   unstyled.style.opacity = '1'; // Reveal raw HTML
-  await wait(1500);
+  await wait(1300);
 
-  // -- Step 3: Request CSS --
+  // -- Step 4: HTTP Stylesheet (CSS) --
   if (isSkipped) return;
-  packetText.innerText = "GET /guide.css";
-  packet.style.animation = "none"; void packet.offsetWidth;
-  packet.style.animation = "reqPacket 1.5s ease-in-out forwards";
-  await wait(1800);
+  sendPacketAnim("GET /styles/guide.css", 'req', 1.2);
+  await wait(1350);
 
   if (isSkipped) return;
-  packetText.innerText = "200 OK (text/css)";
-  packet.style.animation = "none"; void packet.offsetWidth;
-  packet.style.animation = "sendPacket 1.5s ease-in-out forwards";
-  await wait(1500);
+  sendPacketAnim("200 OK (text/css)", 'send', 1.2);
+  await wait(1100);
 
   if (isSkipped) return;
   styled.style.opacity = '1'; // Reveal 1:1 styled preview
   unstyled.classList.add('preview-fade-out'); // Crossfade out raw HTML
-  await wait(1500);
+  await wait(1300);
 
-  // -- Step 4: Request Images --
+  // -- Step 5: HTTP Asset (Image) --
   if (isSkipped) return;
-  packetText.innerText = "GET /assets/luke.webp";
-  packet.style.animation = "none"; void packet.offsetWidth;
-  packet.style.animation = "reqPacket 1.5s ease-in-out forwards";
-  await wait(1800);
+  sendPacketAnim("GET /assets/luke.webp", 'req', 1.2);
+  await wait(1350);
 
   if (isSkipped) return;
-  packetText.innerText = "200 OK (image/webp)";
-  packet.style.animation = "none"; void packet.offsetWidth;
-  packet.style.animation = "sendPacket 1.5s ease-in-out forwards";
-  await wait(1500);
+  sendPacketAnim("200 OK (image/webp)", 'send', 1.2);
   await wait(1200);
+  await wait(800);
 
   // -- Step 5: Expand smoothly from the PC viewport to the full page --
   if (isSkipped) return;
