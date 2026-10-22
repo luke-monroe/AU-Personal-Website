@@ -3,11 +3,13 @@ let isSkipped = false;
 
 document.addEventListener('DOMContentLoaded', () => {
   // Check if we should skip via URL (e.g., iframe source ?no-cutscene=true)
-  if (window.location.search.includes('no-cutscene')) {
+  // or if it has already played during this browser session
+  if (window.location.search.includes('no-cutscene') || sessionStorage.getItem('cutscene_shown')) {
     const overlay = document.getElementById('cutscene-overlay');
     if (overlay) overlay.remove();
     return;
   }
+  sessionStorage.setItem('cutscene_shown', 'true');
   document.body.style.overflow = 'hidden';
   initMatrixCanvas();
   runCutsceneSequence();

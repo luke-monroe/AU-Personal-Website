@@ -208,6 +208,10 @@ a { color: var(--text-main); }
   overflow: hidden;
 }
 
+html.no-cutscene #cutscene-overlay {
+  display: none !important;
+}
+
 #matrix-canvas {
   position: absolute;
   inset: 0;
