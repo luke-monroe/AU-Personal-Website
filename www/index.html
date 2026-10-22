@@ -10,6 +10,11 @@
     if (localStorage.getItem('theme') === 'hacker') {
       document.documentElement.setAttribute('data-theme', 'hacker');
     }
+    const navEntry = performance.getEntriesByType?.('navigation')?.[0];
+    const isReload = navEntry ? navEntry.type === 'reload' : (performance.navigation && performance.navigation.type === 1);
+    if (isReload) {
+      sessionStorage.removeItem('cutscene_shown');
+    }
     if (window.location.search.includes('no-cutscene') || sessionStorage.getItem('cutscene_shown')) {
       document.documentElement.classList.add('no-cutscene');
     }

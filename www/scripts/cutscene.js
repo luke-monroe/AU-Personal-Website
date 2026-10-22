@@ -2,6 +2,12 @@ let matrixIntervalId = null;
 let isSkipped = false;
 
 document.addEventListener('DOMContentLoaded', () => {
+  const navEntry = performance.getEntriesByType?.('navigation')?.[0];
+  const isReload = navEntry ? navEntry.type === 'reload' : (performance.navigation && performance.navigation.type === 1);
+  if (isReload) {
+    sessionStorage.removeItem('cutscene_shown');
+  }
+
   // Check if we should skip via URL (e.g., iframe source ?no-cutscene=true)
   // or if it has already played during this browser session
   if (window.location.search.includes('no-cutscene') || sessionStorage.getItem('cutscene_shown')) {
